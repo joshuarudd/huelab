@@ -1,0 +1,31 @@
+{
+  "name": "@huelab/core",
+  "version": "0.1.0",
+  "description": "Accessible color system toolkit — OKLCH ramp generation, WCAG/APCA contrast, token mapping",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "culori": "^4.0.0",
+    "apca-w3": "^0.1.9"
+  },
+  "devDependencies": {
+    "@types/culori": "^2.1.0",
+    "@types/apca-w3": "^0.1.3",
+    "typescript": "^5.7.0"
+  },
+  "license": "MIT"
+}

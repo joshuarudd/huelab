@@ -1,0 +1,15 @@
+{
+  "name": "huelab",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=@huelab/webapp",
+    "build": "npm run build --workspace=@huelab/core && npm run build --workspace=@huelab/preset-shadcn && npm run build --workspace=@huelab/webapp",
+    "typecheck": "tsc --build"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
