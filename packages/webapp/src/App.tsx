@@ -1,3 +1,5 @@
+import { RampOverview } from './components/RampOverview.js';
+
 export function App() {
   return (
     <div className="min-h-screen bg-neutral-950 text-white">
@@ -19,8 +21,7 @@ export function App() {
         </div>
       </main>
       <footer className="border-t border-neutral-800 px-4 py-2">
-        {/* Ramp Overview — Task 15 */}
-        <p className="text-neutral-400">Ramp Overview</p>
+        <RampOverview />
       </footer>
     </div>
   );
