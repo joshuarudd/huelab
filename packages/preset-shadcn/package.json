@@ -19,7 +19,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@huelab/core": "workspace:*"
+    "@huelab/core": "*"
   },
   "devDependencies": {
     "typescript": "^5.7.0"
