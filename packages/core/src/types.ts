@@ -163,7 +163,7 @@ export interface Preset {
 
 /** Parsed result from importing CSS */
 export interface CSSImportResult {
-  ramps: Ramp[];
+  ramps: Array<{ name: string; stops: Array<{ id: number; value: string }> }>;
   tokens: {
     light: Record<string, string>; // token name -> CSS value
     dark: Record<string, string>;
