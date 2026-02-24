@@ -1,4 +1,6 @@
+import { RampEditor } from './components/RampEditor.js';
 import { RampOverview } from './components/RampOverview.js';
+import { AuditPanel } from './components/AuditPanel.js';
 
 export function App() {
   return (
@@ -8,16 +10,14 @@ export function App() {
       </header>
       <main className="flex flex-1">
         <div className="w-80 border-r border-neutral-800 p-4">
-          {/* Ramp Editor — Task 14 */}
-          <p className="text-neutral-400">Ramp Editor</p>
+          <RampEditor />
         </div>
         <div className="flex-1 p-4">
           {/* Token Map — Task 16 */}
           <p className="text-neutral-400">Token Map</p>
         </div>
         <div className="w-80 border-l border-neutral-800 p-4">
-          {/* Audit Panel — Task 17 */}
-          <p className="text-neutral-400">Audit Panel</p>
+          <AuditPanel />
         </div>
       </main>
       <footer className="border-t border-neutral-800 px-4 py-2">
