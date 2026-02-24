@@ -28,8 +28,8 @@ export function parseColor(input: string): OklchColor | undefined {
   if (!oklch) return undefined;
 
   return {
-    l: oklch.l,
-    c: oklch.c,
+    l: oklch.l || 0,
+    c: oklch.c || 0,
     h: oklch.h ?? 0,
   };
 }
@@ -54,8 +54,8 @@ export function toColor(input: string): Color {
 
   return {
     oklch: {
-      l: oklch.l,
-      c: oklch.c,
+      l: oklch.l || 0,
+      c: oklch.c || 0,
       h: oklch.h ?? 0,
     },
     hex,
@@ -114,8 +114,8 @@ export function clampToSrgb(color: OklchColor): OklchColor {
   const clamped = clampChroma(culoriColor, 'oklch');
 
   return {
-    l: clamped.l,
-    c: clamped.c,
+    l: clamped.l || 0,
+    c: clamped.c || 0,
     h: clamped.h ?? 0,
   };
 }
