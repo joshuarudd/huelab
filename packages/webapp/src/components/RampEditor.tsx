@@ -12,8 +12,7 @@ import { useProject } from '../store.js';
 import { ColorPicker } from './ColorPicker.js';
 import { ParamSliders } from './ParamSliders.js';
 import { StopStrip } from './StopStrip.js';
-import { hueToName, parseColor } from '@huelab/core';
-import type { RampParams, OklchColor } from '@huelab/core';
+import { hueToName, parseColor, type RampParams, type OklchColor } from '@huelab/core';
 
 export function RampEditor() {
   const { state, dispatch } = useProject();
