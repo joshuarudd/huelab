@@ -106,13 +106,13 @@ export function TokenRow({
 
   return (
     <div className="group flex items-center gap-3 rounded-md px-2 py-1.5 hover:bg-neutral-800/50">
-      {/* Token name & description */}
-      <div className="min-w-40 shrink-0">
-        <span className="text-sm font-mono text-neutral-200">{tokenName}</span>
+      {/* Token name & description tooltip */}
+      <div className="relative w-48 shrink-0">
+        <span className="text-sm font-mono text-neutral-200 truncate block">{tokenName}</span>
         {description && (
-          <span className="ml-2 text-xs text-neutral-500 hidden group-hover:inline">
+          <div className="pointer-events-none absolute left-0 top-full z-20 mt-1 hidden rounded bg-neutral-700 px-2 py-1 text-[11px] text-neutral-300 shadow-lg group-hover:block whitespace-nowrap">
             {description}
-          </span>
+          </div>
         )}
       </div>
 
