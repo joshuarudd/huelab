@@ -33,6 +33,7 @@ export type ProjectAction =
   | { type: 'REMOVE_RAMP'; index: number }
   | { type: 'SELECT_RAMP'; index: number }
   | { type: 'UPDATE_RAMP_PARAMS'; index: number; params: RampParams }
+  | { type: 'RENAME_RAMP'; index: number; name: string }
   | { type: 'OVERRIDE_STOP'; rampIndex: number; stopId: number; overrides: Partial<OklchColor> }
   | { type: 'CLEAR_OVERRIDE'; rampIndex: number; stopId: number }
   | { type: 'SET_TOKEN_SOURCE'; tokenName: string; mode: 'light' | 'dark'; source: TokenSource }

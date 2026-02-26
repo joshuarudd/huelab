@@ -25,6 +25,8 @@ import {
   getStops,
   resolveTokens,
   auditTokenPairs,
+  hueToName,
+  parseColor,
 } from '@huelab/core';
 import { shadcnPreset } from '@huelab/preset-shadcn';
 import type { ProjectState, ProjectAction, ProjectContextValue } from './types.js';
@@ -131,6 +133,34 @@ export function projectReducer(
       return {
         ...state,
         ramps: newRamps,
+      };
+    }
+
+    case 'RENAME_RAMP': {
+      if (action.index < 0 || action.index >= state.ramps.length) {
+        return state;
+      }
+      const oldName = state.ramps[action.index].name;
+      const newName = action.name.trim();
+      if (!newName || newName === oldName) return state;
+      const newRamps = state.ramps.map((r, i) =>
+        i === action.index ? { ...r, name: newName } : r,
+      );
+      // Cascade rename through token mapping
+      const newMapping = state.tokenMapping.map(token => {
+        let updated = token;
+        if (token.light.type === 'ramp' && token.light.ramp === oldName) {
+          updated = { ...updated, light: { ...token.light, ramp: newName } };
+        }
+        if (token.dark.type === 'ramp' && token.dark.ramp === oldName) {
+          updated = { ...updated, dark: { ...token.dark, ramp: newName } };
+        }
+        return updated;
+      });
+      return {
+        ...state,
+        ramps: newRamps,
+        tokenMapping: newMapping,
       };
     }
 

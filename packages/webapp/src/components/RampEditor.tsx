@@ -7,7 +7,7 @@
  * dependent views.
  */
 
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useProject } from '../store.js';
 import { ColorPicker } from './ColorPicker.js';
 import { ParamSliders } from './ParamSliders.js';
@@ -18,6 +18,8 @@ export function RampEditor() {
   const { state, dispatch } = useProject();
 
   const ramp = state.ramps[state.selectedRampIndex];
+  const [editingName, setEditingName] = useState(false);
+  const [nameValue, setNameValue] = useState('');
 
   // -------------------------------------------------------------------------
   // Handlers
@@ -69,6 +71,18 @@ export function RampEditor() {
     [state.selectedRampIndex, dispatch],
   );
 
+  const handleRenameCommit = useCallback(() => {
+    const trimmed = nameValue.trim();
+    if (trimmed && trimmed !== ramp.name) {
+      dispatch({
+        type: 'RENAME_RAMP',
+        index: state.selectedRampIndex,
+        name: trimmed,
+      });
+    }
+    setEditingName(false);
+  }, [nameValue, ramp, state.selectedRampIndex, dispatch]);
+
   // -------------------------------------------------------------------------
   // Empty state: no ramps loaded yet
   // -------------------------------------------------------------------------
@@ -89,13 +103,35 @@ export function RampEditor() {
 
   return (
     <div className="flex h-full flex-col gap-5 overflow-y-auto">
-      {/* Ramp name */}
+      {/* Ramp name (click to edit) */}
       <div>
-        <h2 className="text-sm font-semibold text-neutral-200">
-          {ramp.name}
-        </h2>
+        {editingName ? (
+          <input
+            type="text"
+            value={nameValue}
+            onChange={(e) => setNameValue(e.target.value)}
+            onBlur={handleRenameCommit}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleRenameCommit();
+              if (e.key === 'Escape') setEditingName(false);
+            }}
+            className="w-full rounded border border-neutral-600 bg-neutral-800 px-1.5 py-0.5 text-sm font-semibold text-neutral-200 focus:border-blue-500 focus:outline-none"
+            autoFocus
+          />
+        ) : (
+          <h2
+            className="cursor-pointer text-sm font-semibold text-neutral-200 hover:text-white"
+            onClick={() => {
+              setNameValue(ramp.name);
+              setEditingName(true);
+            }}
+            title="Click to rename"
+          >
+            {ramp.name}
+          </h2>
+        )}
         <p className="text-xs text-neutral-500">
-          {ramp.stops.length} stops · base at {ramp.baseStopId}
+          {ramp.stops.length} stops &middot; base at {ramp.baseStopId}
         </p>
       </div>
 

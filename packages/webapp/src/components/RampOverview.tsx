@@ -7,6 +7,7 @@
  */
 
 import { useMemo, useCallback } from 'react';
+import { hueToName, parseColor } from '@huelab/core';
 import { useProject } from '../store.js';
 
 /**
@@ -30,12 +31,23 @@ export function RampOverview() {
   const referencedNames = useReferencedRampNames();
 
   const handleAddRamp = useCallback(() => {
+    const baseColor = '#3366cc';
+    const parsed = parseColor(baseColor);
+    const baseName = parsed ? hueToName(parsed.h, parsed.c) : 'color';
+    // Deduplicate: if "blue" exists, try "blue-2", "blue-3", etc.
+    const existingNames = new Set(state.ramps.map(r => r.name));
+    let name = baseName;
+    let suffix = 2;
+    while (existingNames.has(name)) {
+      name = `${baseName}-${suffix}`;
+      suffix++;
+    }
     dispatch({
       type: 'ADD_RAMP',
-      name: 'color-' + Date.now(),
-      params: { baseColor: '#3366cc', chromaCurve: 'natural', hueShift: 0 },
+      name,
+      params: { baseColor, chromaCurve: 'natural', hueShift: 0 },
     });
-  }, [dispatch]);
+  }, [dispatch, state.ramps]);
 
   const handleSelectRamp = useCallback(
     (index: number) => {
