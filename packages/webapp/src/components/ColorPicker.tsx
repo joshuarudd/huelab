@@ -1,8 +1,9 @@
 /**
- * ColorPicker — hex input + visual color well for base color.
+ * ColorPicker — hex input + native OS color picker for base color.
  *
- * Accepts hex values via a text input. Shows a color well preview
- * of the current color. Validates input before dispatching changes.
+ * Accepts hex values via the text input or via the native color picker
+ * (click the swatch to open the OS system color picker). Both inputs
+ * sync bidirectionally. Validates text input before dispatching changes.
  */
 
 import { useState, useEffect, useCallback } from 'react';
@@ -79,7 +80,7 @@ export function ColorPicker({ value, onChange, label }: ColorPickerProps) {
         {/* Native color picker styled as swatch */}
         <input
           type="color"
-          value={isValidHex(inputValue) ? normalizeHex(inputValue) : value}
+          value={isValidHex(inputValue) ? normalizeHex(inputValue) : normalizeHex(value)}
           onChange={(e) => {
             const hex = e.target.value.toLowerCase();
             setInputValue(hex);
