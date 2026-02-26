@@ -7,11 +7,12 @@
  * dependent views.
  */
 
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useProject } from '../store.js';
 import { ColorPicker } from './ColorPicker.js';
 import { ParamSliders } from './ParamSliders.js';
 import { StopStrip } from './StopStrip.js';
+import { hueToName, parseColor } from '@huelab/core';
 import type { RampParams, OklchColor } from '@huelab/core';
 
 export function RampEditor() {
@@ -84,6 +85,35 @@ export function RampEditor() {
     setEditingName(false);
   }, [nameValue, ramp, state.selectedRampIndex, dispatch]);
 
+  // Compute suggested name from current base color's hue
+  const suggestedName = useMemo(() => {
+    if (!ramp) return null;
+    const parsed = parseColor(ramp.params.baseColor);
+    if (!parsed) return null;
+    const baseName = hueToName(parsed.h, parsed.c);
+    // Strip any numeric suffix from current name for comparison (e.g. "blue-2" → "blue")
+    const currentBase = ramp.name.replace(/-\d+$/, '');
+    if (baseName === currentBase) return null;
+    // Deduplicate: if "orange" exists, suggest "orange-2", etc.
+    const existingNames = new Set(state.ramps.map(r => r.name));
+    let name = baseName;
+    let suffix = 2;
+    while (existingNames.has(name) && name !== ramp.name) {
+      name = `${baseName}-${suffix}`;
+      suffix++;
+    }
+    return name;
+  }, [ramp, state.ramps]);
+
+  const handleAcceptSuggestion = useCallback(() => {
+    if (!suggestedName || !ramp) return;
+    dispatch({
+      type: 'RENAME_RAMP',
+      index: state.selectedRampIndex,
+      name: suggestedName,
+    });
+  }, [suggestedName, ramp, state.selectedRampIndex, dispatch]);
+
   // -------------------------------------------------------------------------
   // Empty state: no ramps loaded yet
   // -------------------------------------------------------------------------
@@ -130,6 +160,15 @@ export function RampEditor() {
           >
             {ramp.name}
           </h2>
+        )}
+        {suggestedName && !editingName && (
+          <button
+            type="button"
+            onClick={handleAcceptSuggestion}
+            className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+          >
+            Rename to &ldquo;{suggestedName}&rdquo;?
+          </button>
         )}
         <p className="text-xs text-neutral-500">
           {ramp.stops.length} stops &middot; base at {ramp.baseStopId}
