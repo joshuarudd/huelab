@@ -215,11 +215,17 @@ export function projectReducer(
       });
       if (!found) {
         const unset: TokenSource = { type: 'literal', value: 'transparent' };
-        newMapping.push({
-          name: action.tokenName,
-          light: action.mode === 'light' ? action.source : unset,
-          dark: action.mode === 'dark' ? action.source : unset,
-        });
+        return {
+          ...state,
+          tokenMapping: [
+            ...newMapping,
+            {
+              name: action.tokenName,
+              light: action.mode === 'light' ? action.source : unset,
+              dark: action.mode === 'dark' ? action.source : unset,
+            },
+          ],
+        };
       }
       return {
         ...state,

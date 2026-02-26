@@ -110,7 +110,7 @@ export function TokenRow({
       <div className="relative w-48 shrink-0">
         <span className="text-sm font-mono text-neutral-200 truncate block">{tokenName}</span>
         {description && (
-          <div className="pointer-events-none absolute left-0 top-full z-20 mt-1 hidden rounded bg-neutral-700 px-2 py-1 text-[11px] text-neutral-300 shadow-lg group-hover:block whitespace-nowrap">
+          <div className="pointer-events-none absolute left-0 top-full z-30 mt-1 hidden rounded bg-neutral-700 px-2 py-1 text-[11px] text-neutral-300 shadow-lg group-hover:block whitespace-nowrap">
             {description}
           </div>
         )}
