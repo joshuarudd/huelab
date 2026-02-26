@@ -76,11 +76,18 @@ export function ColorPicker({ value, onChange, label }: ColorPickerProps) {
         </label>
       )}
       <div className="flex items-center gap-2">
-        {/* Color well */}
-        <div
-          className="h-9 w-9 shrink-0 rounded-md border border-neutral-700"
-          style={{ backgroundColor: isValidHex(inputValue) ? inputValue : value }}
-          aria-label="Color preview"
+        {/* Native color picker styled as swatch */}
+        <input
+          type="color"
+          value={isValidHex(inputValue) ? normalizeHex(inputValue) : value}
+          onChange={(e) => {
+            const hex = e.target.value.toLowerCase();
+            setInputValue(hex);
+            setIsInvalid(false);
+            onChange(hex);
+          }}
+          className="h-9 w-9 shrink-0 cursor-pointer appearance-none rounded-md border border-neutral-700 bg-transparent p-0 [&::-webkit-color-swatch-wrapper]:p-0.5 [&::-webkit-color-swatch]:rounded-sm [&::-webkit-color-swatch]:border-none [&::-moz-color-swatch]:rounded-sm [&::-moz-color-swatch]:border-none"
+          aria-label={label ? `${label} color picker` : 'Color picker'}
         />
         {/* Hex input */}
         <input
