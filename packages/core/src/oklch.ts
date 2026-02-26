@@ -157,3 +157,38 @@ export function hueDifference(h1: number, h2: number): number {
   const diff = Math.abs(h1 - h2) % 360;
   return diff > 180 ? 360 - diff : diff;
 }
+
+// ---------------------------------------------------------------------------
+// Hue-to-name mapping
+// ---------------------------------------------------------------------------
+
+/** OKLCH hue ranges mapped to human-readable color names */
+const HUE_NAMES: Array<{ max: number; name: string }> = [
+  { max: 20, name: 'pink' },
+  { max: 45, name: 'red' },
+  { max: 65, name: 'orange' },
+  { max: 90, name: 'amber' },
+  { max: 115, name: 'yellow' },
+  { max: 145, name: 'lime' },
+  { max: 175, name: 'green' },
+  { max: 200, name: 'emerald' },
+  { max: 230, name: 'cyan' },
+  { max: 260, name: 'sky' },
+  { max: 285, name: 'blue' },
+  { max: 310, name: 'indigo' },
+  { max: 335, name: 'purple' },
+  { max: 360, name: 'pink' },
+];
+
+/**
+ * Map an OKLCH hue angle + chroma to a human-readable color name.
+ * Returns "neutral" for achromatic colors (chroma < 0.01).
+ */
+export function hueToName(hue: number, chroma: number): string {
+  if (chroma < 0.01) return 'neutral';
+  const h = ((hue % 360) + 360) % 360;
+  for (const { max, name } of HUE_NAMES) {
+    if (h < max) return name;
+  }
+  return 'pink';
+}

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseColor, toColor, formatOklchCss, toHex, clampToSrgb, isInGamut, hueDifference } from '../oklch.js';
+import { parseColor, toColor, formatOklchCss, toHex, clampToSrgb, isInGamut, hueDifference, hueToName } from '../oklch.js';
 
 describe('parseColor', () => {
   it('parses hex to OKLCH', () => {
@@ -98,5 +98,34 @@ describe('hueDifference', () => {
 
   it('is symmetric', () => {
     expect(hueDifference(10, 350)).toBe(hueDifference(350, 10));
+  });
+});
+
+describe('hueToName', () => {
+  it('returns "neutral" for achromatic colors', () => {
+    expect(hueToName(180, 0.005)).toBe('neutral');
+    expect(hueToName(0, 0)).toBe('neutral');
+  });
+
+  it('maps hue angles to expected color names', () => {
+    expect(hueToName(30, 0.1)).toBe('red');
+    expect(hueToName(55, 0.1)).toBe('orange');
+    expect(hueToName(80, 0.1)).toBe('amber');
+    expect(hueToName(100, 0.1)).toBe('yellow');
+    expect(hueToName(130, 0.1)).toBe('lime');
+    expect(hueToName(160, 0.1)).toBe('green');
+    expect(hueToName(190, 0.1)).toBe('emerald');
+    expect(hueToName(215, 0.1)).toBe('cyan');
+    expect(hueToName(245, 0.1)).toBe('sky');
+    expect(hueToName(270, 0.1)).toBe('blue');
+    expect(hueToName(295, 0.1)).toBe('indigo');
+    expect(hueToName(320, 0.1)).toBe('purple');
+    expect(hueToName(350, 0.1)).toBe('pink');
+    expect(hueToName(10, 0.1)).toBe('pink');
+  });
+
+  it('normalizes hue to 0-360 range', () => {
+    expect(hueToName(370, 0.1)).toBe('pink');
+    expect(hueToName(-10, 0.1)).toBe('pink');
   });
 });
