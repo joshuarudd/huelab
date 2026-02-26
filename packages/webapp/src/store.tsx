@@ -25,8 +25,6 @@ import {
   getStops,
   resolveTokens,
   auditTokenPairs,
-  hueToName,
-  parseColor,
 } from '@huelab/core';
 import { shadcnPreset } from '@huelab/preset-shadcn';
 import type { ProjectState, ProjectAction, ProjectContextValue } from './types.js';
@@ -143,6 +141,10 @@ export function projectReducer(
       const oldName = state.ramps[action.index].name;
       const newName = action.name.trim();
       if (!newName || newName === oldName) return state;
+      // Prevent duplicate names
+      if (state.ramps.some((r, i) => i !== action.index && r.name === newName)) {
+        return state;
+      }
       const newRamps = state.ramps.map((r, i) =>
         i === action.index ? { ...r, name: newName } : r,
       );

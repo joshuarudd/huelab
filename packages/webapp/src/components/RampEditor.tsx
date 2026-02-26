@@ -72,6 +72,7 @@ export function RampEditor() {
   );
 
   const handleRenameCommit = useCallback(() => {
+    if (!ramp) { setEditingName(false); return; }
     const trimmed = nameValue.trim();
     if (trimmed && trimmed !== ramp.name) {
       dispatch({
