@@ -28,7 +28,7 @@ import {
 } from '@huelab/core';
 import { shadcnPreset } from '@huelab/preset-shadcn';
 import type { ProjectState, ProjectAction, ProjectContextValue } from './types.js';
-import type { AuditReport } from '@huelab/core';
+import type { AuditReport, TokenSource } from '@huelab/core';
 
 // ---------------------------------------------------------------------------
 // Initial state
@@ -204,13 +204,23 @@ export function projectReducer(
     }
 
     case 'SET_TOKEN_SOURCE': {
+      let found = false;
       const newMapping = state.tokenMapping.map(token => {
         if (token.name !== action.tokenName) return token;
+        found = true;
         return {
           ...token,
           [action.mode]: action.source,
         };
       });
+      if (!found) {
+        const unset: TokenSource = { type: 'literal', value: 'transparent' };
+        newMapping.push({
+          name: action.tokenName,
+          light: action.mode === 'light' ? action.source : unset,
+          dark: action.mode === 'dark' ? action.source : unset,
+        });
+      }
       return {
         ...state,
         tokenMapping: newMapping,
