@@ -72,7 +72,7 @@ export function ColorPicker({ value, onChange, label }: ColorPickerProps) {
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
-        <label className="text-xs font-medium text-neutral-400">
+        <label className="text-xs font-medium text-[var(--app-text-muted)]">
           {label}
         </label>
       )}
@@ -87,7 +87,7 @@ export function ColorPicker({ value, onChange, label }: ColorPickerProps) {
             setIsInvalid(false);
             onChange(hex);
           }}
-          className="h-9 w-9 shrink-0 cursor-pointer appearance-none rounded-md border border-neutral-700 bg-transparent p-0 [&::-webkit-color-swatch-wrapper]:p-0.5 [&::-webkit-color-swatch]:rounded-sm [&::-webkit-color-swatch]:border-none [&::-moz-color-swatch]:rounded-sm [&::-moz-color-swatch]:border-none"
+          className="h-9 w-9 shrink-0 cursor-pointer appearance-none rounded-md border border-[var(--app-border-secondary)] bg-transparent p-0 [&::-webkit-color-swatch-wrapper]:p-0.5 [&::-webkit-color-swatch]:rounded-sm [&::-webkit-color-swatch]:border-none [&::-moz-color-swatch]:rounded-sm [&::-moz-color-swatch]:border-none"
           aria-label={label ? `${label} color picker` : 'Color picker'}
         />
         {/* Hex input */}
@@ -101,17 +101,17 @@ export function ColorPicker({ value, onChange, label }: ColorPickerProps) {
           onBlur={handleCommit}
           onKeyDown={handleKeyDown}
           placeholder="#000000"
-          className={`h-9 flex-1 rounded-md border bg-neutral-900 px-2.5 text-sm font-mono text-neutral-100 placeholder:text-neutral-600 focus:outline-none focus:ring-1 ${
+          className={`h-9 flex-1 rounded-md border bg-[var(--app-surface)] px-2.5 text-sm font-mono text-[var(--app-text)] placeholder:text-[var(--app-text-faint)] focus:outline-none focus:ring-1 ${
             isInvalid
-              ? 'border-red-500 focus:ring-red-500'
-              : 'border-neutral-700 focus:ring-neutral-500'
+              ? 'border-[var(--app-error)] focus:ring-[var(--app-error)]'
+              : 'border-[var(--app-border-secondary)] focus:ring-[var(--app-border-secondary)]'
           }`}
           aria-label={label ?? 'Hex color input'}
           aria-invalid={isInvalid}
         />
       </div>
       {isInvalid && (
-        <p className="text-xs text-red-400">
+        <p className="text-xs text-[var(--app-error)]">
           Enter a valid hex color (e.g., #3b82f6)
         </p>
       )}

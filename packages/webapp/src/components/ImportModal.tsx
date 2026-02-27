@@ -403,16 +403,16 @@ export function ImportModal({ open, onClose }: ImportModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--app-backdrop)] backdrop-blur-sm"
       onClick={handleBackdropClick}
     >
-      <div className="mx-4 w-full max-w-lg rounded-xl border border-neutral-800 bg-neutral-950 shadow-2xl">
+      <div className="mx-4 w-full max-w-lg rounded-xl border border-[var(--app-border)] bg-[var(--app-bg)] shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-neutral-800 px-5 py-4">
-          <h2 className="text-base font-semibold text-neutral-200">Import</h2>
+        <div className="flex items-center justify-between border-b border-[var(--app-border)] px-5 py-4">
+          <h2 className="text-base font-semibold text-[var(--app-text-secondary)]">Import</h2>
           <button
             onClick={handleClose}
-            className="rounded p-1 text-neutral-500 transition-colors hover:bg-neutral-800 hover:text-neutral-300"
+            className="rounded p-1 text-[var(--app-text-muted)] transition-colors hover:bg-[var(--app-elevated)] hover:text-[var(--app-text-secondary)]"
             aria-label="Close"
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
@@ -425,14 +425,14 @@ export function ImportModal({ open, onClose }: ImportModalProps) {
         <div className="space-y-4 px-5 py-4">
           {/* File picker */}
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-neutral-400">
+            <label className="mb-1.5 block text-xs font-medium text-[var(--app-text-muted)]">
               File
             </label>
             <div
               className={`flex cursor-pointer items-center justify-center rounded-lg border-2 border-dashed px-4 py-5 transition-colors ${
                 isDragging
-                  ? 'border-blue-500 bg-blue-950/20'
-                  : 'border-neutral-700 hover:border-neutral-600'
+                  ? 'border-[var(--app-accent)] bg-[var(--app-accent-bg)]'
+                  : 'border-[var(--app-border-secondary)] hover:border-[var(--app-border-input)]'
               }`}
               onClick={() => fileInputRef.current?.click()}
               onDragOver={handleDragOver}
@@ -440,11 +440,11 @@ export function ImportModal({ open, onClose }: ImportModalProps) {
               onDrop={handleDrop}
             >
               <div className="text-center">
-                <p className="text-sm text-neutral-400">
+                <p className="text-sm text-[var(--app-text-muted)]">
                   Drop a file here or{' '}
-                  <span className="text-blue-400 underline">browse</span>
+                  <span className="text-[var(--app-accent-text)] underline">browse</span>
                 </p>
-                <p className="mt-1 text-[10px] text-neutral-600">
+                <p className="mt-1 text-[10px] text-[var(--app-text-faint)]">
                   Accepts .css or .json
                 </p>
               </div>
@@ -460,16 +460,16 @@ export function ImportModal({ open, onClose }: ImportModalProps) {
 
           {/* Separator */}
           <div className="flex items-center gap-3">
-            <div className="flex-1 border-t border-neutral-800" />
-            <span className="text-[10px] font-medium uppercase tracking-wider text-neutral-600">
+            <div className="flex-1 border-t border-[var(--app-border)]" />
+            <span className="text-[10px] font-medium uppercase tracking-wider text-[var(--app-text-faint)]">
               or paste
             </span>
-            <div className="flex-1 border-t border-neutral-800" />
+            <div className="flex-1 border-t border-[var(--app-border)]" />
           </div>
 
           {/* Paste area */}
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-neutral-400">
+            <label className="mb-1.5 block text-xs font-medium text-[var(--app-text-muted)]">
               CSS or JSON
             </label>
             <textarea
@@ -477,36 +477,36 @@ export function ImportModal({ open, onClose }: ImportModalProps) {
               onChange={(e) => parseAndPreview(e.target.value)}
               placeholder={'Paste CSS (@theme/:root) or Figma JSON here...'}
               rows={8}
-              className="w-full rounded-lg border border-neutral-700 bg-neutral-900 px-3 py-2 font-mono text-xs text-neutral-300 placeholder-neutral-600 transition-colors focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600/50"
+              className="w-full rounded-lg border border-[var(--app-border-secondary)] bg-[var(--app-surface)] px-3 py-2 font-mono text-xs text-[var(--app-text-secondary)] placeholder-[var(--app-text-faint)] transition-colors focus:border-[var(--app-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--app-accent)]"
               spellCheck={false}
             />
           </div>
 
           {/* Error */}
           {error && (
-            <div className="rounded-lg border border-red-900/50 bg-red-950/30 px-3 py-2">
-              <p className="text-xs text-red-400">{error}</p>
+            <div className="rounded-lg border border-[var(--app-error-border)] bg-[var(--app-error-bg)] px-3 py-2">
+              <p className="text-xs text-[var(--app-error)]">{error}</p>
             </div>
           )}
 
           {/* Preview */}
           {preview && (
-            <div className="rounded-lg border border-neutral-800 bg-neutral-900/50 px-3 py-2.5">
+            <div className="rounded-lg border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-2.5">
               <div className="flex items-center gap-2">
-                <span className="rounded bg-neutral-800 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-neutral-400">
+                <span className="rounded bg-[var(--app-elevated)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--app-text-muted)]">
                   {preview.format === 'css' ? 'CSS' : 'Figma JSON'}
                 </span>
               </div>
               <div className="mt-2 flex gap-6 text-sm">
                 <div>
-                  <span className="font-semibold text-neutral-200">{preview.rampCount}</span>
-                  <span className="ml-1 text-neutral-500">
+                  <span className="font-semibold text-[var(--app-text-secondary)]">{preview.rampCount}</span>
+                  <span className="ml-1 text-[var(--app-text-muted)]">
                     {preview.rampCount === 1 ? 'ramp' : 'ramps'}
                   </span>
                 </div>
                 <div>
-                  <span className="font-semibold text-neutral-200">{preview.tokenCount}</span>
-                  <span className="ml-1 text-neutral-500">
+                  <span className="font-semibold text-[var(--app-text-secondary)]">{preview.tokenCount}</span>
+                  <span className="ml-1 text-[var(--app-text-muted)]">
                     {preview.tokenCount === 1 ? 'token' : 'tokens'}
                   </span>
                 </div>
@@ -516,7 +516,7 @@ export function ImportModal({ open, onClose }: ImportModalProps) {
                   {preview.rampNames.map((name) => (
                     <span
                       key={name}
-                      className="rounded bg-neutral-800 px-1.5 py-0.5 text-[10px] text-neutral-400"
+                      className="rounded bg-[var(--app-elevated)] px-1.5 py-0.5 text-[10px] text-[var(--app-text-muted)]"
                     >
                       {name}
                     </span>
@@ -528,17 +528,17 @@ export function ImportModal({ open, onClose }: ImportModalProps) {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-2 border-t border-neutral-800 px-5 py-3">
+        <div className="flex items-center justify-end gap-2 border-t border-[var(--app-border)] px-5 py-3">
           <button
             onClick={handleClose}
-            className="rounded-lg px-3 py-1.5 text-sm text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-neutral-300"
+            className="rounded-lg px-3 py-1.5 text-sm text-[var(--app-text-muted)] transition-colors hover:bg-[var(--app-elevated)] hover:text-[var(--app-text-secondary)]"
           >
             Cancel
           </button>
           <button
             onClick={handleImport}
             disabled={!preview || !!error}
-            className="rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-lg bg-[var(--app-accent)] px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[var(--app-accent-hover)] disabled:cursor-not-allowed disabled:opacity-40"
           >
             Import
           </button>

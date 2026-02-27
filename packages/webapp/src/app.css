@@ -1,1 +1,80 @@
 @import "tailwindcss";
+
+/* -----------------------------------------------------------------------
+   App theme — CSS custom properties for light / dark mode
+   :root = light (default), .dark = dark
+   ----------------------------------------------------------------------- */
+
+:root {
+  --app-bg: #fafafa;
+  --app-surface: #ffffff;
+  --app-elevated: #f5f5f5;
+  --app-hover: #e5e5e5;
+  --app-selected: #d4d4d4;
+
+  --app-text: #0a0a0a;
+  --app-text-secondary: #525252;
+  --app-text-muted: #737373;
+  --app-text-faint: #a3a3a3;
+
+  --app-border: #e5e5e5;
+  --app-border-secondary: #d4d4d4;
+  --app-border-input: #a3a3a3;
+
+  --app-accent: #2563eb;
+  --app-accent-hover: #1d4ed8;
+  --app-accent-bg: rgba(37, 99, 235, 0.1);
+  --app-accent-text: #1d4ed8;
+
+  --app-success: #16a34a;
+  --app-success-bg: rgba(22, 163, 74, 0.1);
+  --app-success-border: rgba(22, 163, 74, 0.3);
+  --app-success-text: #15803d;
+
+  --app-error: #dc2626;
+  --app-error-bg: rgba(220, 38, 38, 0.1);
+  --app-error-border: rgba(220, 38, 38, 0.3);
+  --app-error-text: #b91c1c;
+
+  --app-warning-bg: rgba(217, 119, 6, 0.15);
+  --app-warning-text: #b45309;
+
+  --app-backdrop: rgba(0, 0, 0, 0.4);
+}
+
+.dark {
+  --app-bg: #0a0a0a;
+  --app-surface: #171717;
+  --app-elevated: #262626;
+  --app-hover: #404040;
+  --app-selected: #404040;
+
+  --app-text: #ffffff;
+  --app-text-secondary: #d4d4d4;
+  --app-text-muted: #737373;
+  --app-text-faint: #525252;
+
+  --app-border: #262626;
+  --app-border-secondary: #404040;
+  --app-border-input: #525252;
+
+  --app-accent: #3b82f6;
+  --app-accent-hover: #60a5fa;
+  --app-accent-bg: rgba(59, 130, 246, 0.15);
+  --app-accent-text: #93c5fd;
+
+  --app-success: #4ade80;
+  --app-success-bg: rgba(74, 222, 128, 0.1);
+  --app-success-border: rgba(74, 222, 128, 0.2);
+  --app-success-text: #86efac;
+
+  --app-error: #f87171;
+  --app-error-bg: rgba(248, 113, 113, 0.1);
+  --app-error-border: rgba(248, 113, 113, 0.2);
+  --app-error-text: #fca5a5;
+
+  --app-warning-bg: rgba(245, 158, 11, 0.2);
+  --app-warning-text: #fbbf24;
+
+  --app-backdrop: rgba(0, 0, 0, 0.6);
+}

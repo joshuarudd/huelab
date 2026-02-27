@@ -87,14 +87,14 @@ export function RampOverview() {
             className={[
               'flex items-center gap-2 rounded px-2 py-1 cursor-pointer transition-colors',
               isSelected
-                ? 'bg-neutral-700 ring-1 ring-neutral-500'
-                : 'bg-neutral-800/50 hover:bg-neutral-800',
+                ? 'bg-[var(--app-hover)] ring-1 ring-[var(--app-border-secondary)]'
+                : 'bg-[var(--app-elevated)] hover:bg-[var(--app-hover)]',
               !isReferenced ? 'opacity-40' : '',
             ].join(' ')}
           >
             {/* Ramp name */}
             <span
-              className="w-28 shrink-0 truncate text-xs font-medium text-neutral-300"
+              className="w-28 shrink-0 truncate text-xs font-medium text-[var(--app-text-secondary)]"
               title={ramp.name}
             >
               {ramp.name}
@@ -116,7 +116,7 @@ export function RampOverview() {
             <button
               type="button"
               onClick={(e) => handleRemoveRamp(index, e)}
-              className="ml-auto shrink-0 rounded p-0.5 text-neutral-500 hover:bg-neutral-600 hover:text-neutral-200 transition-colors"
+              className="ml-auto shrink-0 rounded p-0.5 text-[var(--app-text-muted)] hover:bg-[var(--app-hover)] hover:text-[var(--app-text-secondary)] transition-colors"
               aria-label={`Remove ramp ${ramp.name}`}
               title="Remove ramp"
             >
@@ -135,7 +135,7 @@ export function RampOverview() {
 
       {/* Empty state */}
       {state.ramps.length === 0 && (
-        <p className="text-xs text-neutral-500 py-1">
+        <p className="text-xs text-[var(--app-text-muted)] py-1">
           No ramps loaded. Add one to get started.
         </p>
       )}
@@ -144,7 +144,7 @@ export function RampOverview() {
       <button
         type="button"
         onClick={handleAddRamp}
-        className="flex items-center gap-1 rounded px-2 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors"
+        className="flex items-center gap-1 rounded px-2 py-1 text-xs text-[var(--app-text-muted)] hover:bg-[var(--app-elevated)] hover:text-[var(--app-text-secondary)] transition-colors"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

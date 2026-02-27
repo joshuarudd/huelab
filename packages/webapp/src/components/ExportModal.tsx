@@ -177,7 +177,7 @@ export function ExportModal({ open, onClose }: ExportModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--app-backdrop)] backdrop-blur-sm"
       onClick={handleBackdropClick}
       onKeyDown={handleKeyDown}
       role="dialog"
@@ -185,13 +185,13 @@ export function ExportModal({ open, onClose }: ExportModalProps) {
       aria-label="Export color system"
       tabIndex={-1}
     >
-      <div className="mx-4 flex max-h-[85vh] w-full max-w-3xl flex-col rounded-xl border border-neutral-700 bg-neutral-900 shadow-2xl">
+      <div className="mx-4 flex max-h-[85vh] w-full max-w-3xl flex-col rounded-xl border border-[var(--app-border-secondary)] bg-[var(--app-surface)] shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-neutral-800 px-5 py-4">
-          <h2 className="text-base font-semibold text-neutral-100">Export</h2>
+        <div className="flex items-center justify-between border-b border-[var(--app-border)] px-5 py-4">
+          <h2 className="text-base font-semibold text-[var(--app-text)]">Export</h2>
           <button
             onClick={onClose}
-            className="rounded-md p-1.5 text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-neutral-200"
+            className="rounded-md p-1.5 text-[var(--app-text-muted)] transition-colors hover:bg-[var(--app-elevated)] hover:text-[var(--app-text-secondary)]"
             aria-label="Close"
           >
             <svg
@@ -212,7 +212,7 @@ export function ExportModal({ open, onClose }: ExportModalProps) {
         </div>
 
         {/* Format selector */}
-        <div className="flex gap-1 border-b border-neutral-800 px-5 py-3">
+        <div className="flex gap-1 border-b border-[var(--app-border)] px-5 py-3">
           {FORMAT_OPTIONS.map((opt) => (
             <button
               key={opt.value}
@@ -222,8 +222,8 @@ export function ExportModal({ open, onClose }: ExportModalProps) {
               }}
               className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                 format === opt.value
-                  ? 'bg-neutral-700 text-neutral-100'
-                  : 'text-neutral-400 hover:bg-neutral-800 hover:text-neutral-300'
+                  ? 'bg-[var(--app-hover)] text-[var(--app-text)]'
+                  : 'text-[var(--app-text-muted)] hover:bg-[var(--app-elevated)] hover:text-[var(--app-text-secondary)]'
               }`}
             >
               {opt.label}
@@ -233,22 +233,22 @@ export function ExportModal({ open, onClose }: ExportModalProps) {
 
         {/* Preview pane */}
         <div className="flex-1 overflow-y-auto px-5 py-4">
-          <pre className="max-h-[50vh] overflow-auto rounded-lg border border-neutral-800 bg-neutral-950 p-4 text-xs leading-relaxed text-neutral-300">
+          <pre className="max-h-[50vh] overflow-auto rounded-lg border border-[var(--app-border)] bg-[var(--app-bg)] p-4 text-xs leading-relaxed text-[var(--app-text-secondary)]">
             <code>{output}</code>
           </pre>
         </div>
 
         {/* Action buttons */}
-        <div className="flex items-center justify-end gap-3 border-t border-neutral-800 px-5 py-4">
+        <div className="flex items-center justify-end gap-3 border-t border-[var(--app-border)] px-5 py-4">
           <button
             onClick={onClose}
-            className="rounded-md px-4 py-2 text-sm font-medium text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-neutral-200"
+            className="rounded-md px-4 py-2 text-sm font-medium text-[var(--app-text-muted)] transition-colors hover:bg-[var(--app-elevated)] hover:text-[var(--app-text-secondary)]"
           >
             Close
           </button>
           <button
             onClick={handleDownload}
-            className="rounded-md border border-neutral-700 bg-neutral-800 px-4 py-2 text-sm font-medium text-neutral-200 transition-colors hover:bg-neutral-700"
+            className="rounded-md border border-[var(--app-border-secondary)] bg-[var(--app-elevated)] px-4 py-2 text-sm font-medium text-[var(--app-text-secondary)] transition-colors hover:bg-[var(--app-hover)]"
           >
             Download
           </button>
@@ -256,8 +256,8 @@ export function ExportModal({ open, onClose }: ExportModalProps) {
             onClick={handleCopy}
             className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
               copied
-                ? 'bg-green-700 text-green-100'
-                : 'bg-blue-600 text-white hover:bg-blue-500'
+                ? 'bg-[var(--app-success)] text-white'
+                : 'bg-[var(--app-accent)] text-white hover:bg-[var(--app-accent-hover)]'
             }`}
           >
             {copied ? 'Copied!' : 'Copy to Clipboard'}

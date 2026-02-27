@@ -14,15 +14,15 @@ export function App() {
   const { state, dispatch } = useProject();
 
   return (
-    <div className="flex flex-col h-screen bg-neutral-950 text-white">
+    <div className="flex flex-col h-screen bg-[var(--app-bg)] text-[var(--app-text)]">
       {/* Toolbar */}
-      <header className="flex items-center justify-between border-b border-neutral-800 px-4 py-3">
+      <header className="flex items-center justify-between border-b border-[var(--app-border)] px-4 py-3">
         <h1 className="text-lg font-semibold">huelab</h1>
         <div className="flex items-center gap-2">
           <select
             value={state.systemSettings.chromaCurve}
             onChange={(e) => dispatch({ type: 'SET_CHROMA_CURVE', curve: e.target.value as ChromaCurve })}
-            className="rounded-md border border-neutral-700 bg-neutral-800 px-3 py-1.5 text-sm text-neutral-300 transition-colors hover:bg-neutral-700"
+            className="rounded-md border border-[var(--app-border-secondary)] bg-[var(--app-elevated)] px-3 py-1.5 text-sm text-[var(--app-text-secondary)] transition-colors hover:bg-[var(--app-hover)]"
             aria-label="Chroma curve"
           >
             <option value="natural">Natural (bell)</option>
@@ -35,8 +35,8 @@ export function App() {
             onClick={() => dispatch({ type: 'SET_AUTO_HUE_SHIFT', enabled: !state.systemSettings.autoHueShift })}
             className={`rounded-md border px-3 py-1.5 text-sm transition-colors ${
               state.systemSettings.autoHueShift
-                ? 'border-blue-600 bg-blue-900/50 text-blue-300'
-                : 'border-neutral-700 bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
+                ? 'border-[var(--app-accent)] bg-[var(--app-accent-bg)] text-[var(--app-accent-text)]'
+                : 'border-[var(--app-border-secondary)] bg-[var(--app-elevated)] text-[var(--app-text-secondary)] hover:bg-[var(--app-hover)]'
             }`}
             aria-label="Auto hue shift"
             aria-pressed={state.systemSettings.autoHueShift}
@@ -46,18 +46,18 @@ export function App() {
 
           <button
             onClick={() => setImportOpen(true)}
-            className="rounded-md border border-neutral-700 bg-neutral-800 px-3 py-1.5 text-sm text-neutral-300 transition-colors hover:bg-neutral-700"
+            className="rounded-md border border-[var(--app-border-secondary)] bg-[var(--app-elevated)] px-3 py-1.5 text-sm text-[var(--app-text-secondary)] transition-colors hover:bg-[var(--app-hover)]"
           >
             Import
           </button>
           <button
             onClick={() => setExportOpen(true)}
-            className="rounded-md border border-neutral-700 bg-neutral-800 px-3 py-1.5 text-sm text-neutral-300 transition-colors hover:bg-neutral-700"
+            className="rounded-md border border-[var(--app-border-secondary)] bg-[var(--app-elevated)] px-3 py-1.5 text-sm text-[var(--app-text-secondary)] transition-colors hover:bg-[var(--app-hover)]"
           >
             Export
           </button>
           <select
-            className="rounded-md border border-neutral-700 bg-neutral-800 px-3 py-1.5 text-sm text-neutral-300 transition-colors hover:bg-neutral-700"
+            className="rounded-md border border-[var(--app-border-secondary)] bg-[var(--app-elevated)] px-3 py-1.5 text-sm text-[var(--app-text-secondary)] transition-colors hover:bg-[var(--app-hover)]"
             defaultValue="shadcn"
           >
             <option value="shadcn">shadcn/ui</option>
@@ -67,19 +67,19 @@ export function App() {
 
       {/* Main three-panel layout */}
       <main className="flex flex-1 overflow-hidden">
-        <div className="w-80 shrink-0 overflow-y-auto border-r border-neutral-800 p-4">
+        <div className="w-80 shrink-0 overflow-y-auto border-r border-[var(--app-border)] p-4">
           <RampEditor />
         </div>
         <div className="flex-1 overflow-y-auto">
           <TokenMap />
         </div>
-        <div className="w-80 shrink-0 overflow-y-auto border-l border-neutral-800 p-4">
+        <div className="w-80 shrink-0 overflow-y-auto border-l border-[var(--app-border)] p-4">
           <AuditPanel />
         </div>
       </main>
 
       {/* Ramp overview strip */}
-      <footer className="border-t border-neutral-800 px-4 py-2">
+      <footer className="border-t border-[var(--app-border)] px-4 py-2">
         <RampOverview />
       </footer>
 

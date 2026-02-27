@@ -33,8 +33,8 @@ function SummaryBar({
 
   if (totalPairs === 0) {
     return (
-      <div className="rounded-lg border border-neutral-800 bg-neutral-900/50 px-3 py-2">
-        <p className="text-sm text-neutral-500">No contrast pairs defined</p>
+      <div className="rounded-lg border border-[var(--app-border)] bg-[var(--app-surface)] px-3 py-2">
+        <p className="text-sm text-[var(--app-text-muted)]">No contrast pairs defined</p>
       </div>
     );
   }
@@ -43,28 +43,28 @@ function SummaryBar({
     <div
       className={`rounded-lg border px-3 py-2 ${
         allPass
-          ? 'border-green-900/50 bg-green-950/30'
-          : 'border-red-900/50 bg-red-950/30'
+          ? 'border-[var(--app-success-border)] bg-[var(--app-success-bg)]'
+          : 'border-[var(--app-error-border)] bg-[var(--app-error-bg)]'
       }`}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span
             className={`text-lg font-bold ${
-              allPass ? 'text-green-400' : 'text-red-400'
+              allPass ? 'text-[var(--app-success)]' : 'text-[var(--app-error)]'
             }`}
           >
             {activePasses}/{totalPairs}
           </span>
-          <span className="text-sm text-neutral-400">
+          <span className="text-sm text-[var(--app-text-muted)]">
             pass ({mode})
           </span>
         </div>
         <span
           className={`rounded px-2 py-0.5 text-xs font-semibold ${
             allPass
-              ? 'bg-green-900/50 text-green-300'
-              : 'bg-red-900/50 text-red-300'
+              ? 'bg-[var(--app-success-bg)] text-[var(--app-success-text)]'
+              : 'bg-[var(--app-error-bg)] text-[var(--app-error-text)]'
           }`}
         >
           {allPass ? 'ALL PASS' : 'FAILURES'}
@@ -72,7 +72,7 @@ function SummaryBar({
       </div>
 
       {/* Inactive mode summary */}
-      <p className="mt-1 text-[10px] text-neutral-500">
+      <p className="mt-1 text-[10px] text-[var(--app-text-muted)]">
         {inactivePasses}/{totalPairs} pass in {inactiveLabel} mode
       </p>
     </div>
@@ -93,8 +93,8 @@ export function AuditPanel() {
     <div className="flex h-full flex-col">
       {/* Panel header */}
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-neutral-300">Contrast Audit</h2>
-        <span className="text-[10px] text-neutral-600">WCAG 2.2 AA</span>
+        <h2 className="text-sm font-semibold text-[var(--app-text-secondary)]">Contrast Audit</h2>
+        <span className="text-[10px] text-[var(--app-text-faint)]">WCAG 2.2 AA</span>
       </div>
 
       {/* Summary bar */}
@@ -119,10 +119,10 @@ export function AuditPanel() {
         </div>
       ) : (
         <div className="mt-6 text-center">
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-[var(--app-text-muted)]">
             Add ramps to see contrast audit results.
           </p>
-          <p className="mt-1 text-xs text-neutral-600">
+          <p className="mt-1 text-xs text-[var(--app-text-faint)]">
             The audit checks foreground/background token pairs against WCAG 2.2 AA thresholds.
           </p>
         </div>
