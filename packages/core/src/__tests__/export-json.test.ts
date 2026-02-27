@@ -12,7 +12,7 @@ const STOPS: StopDefinition[] = [
 
 describe('exportRampJSON', () => {
   it('exports a ramp as valid JSON', () => {
-    const ramp = generateRamp('blue', { baseColor: '#3366cc', chromaCurve: 'natural', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('blue', { baseColor: '#3366cc' }, STOPS);
     const json = exportRampJSON(ramp);
     const parsed = JSON.parse(json);
     expect(parsed.name).toBe('blue');
@@ -21,25 +21,23 @@ describe('exportRampJSON', () => {
   });
 
   it('produces pretty-printed JSON with 2-space indent', () => {
-    const ramp = generateRamp('red', { baseColor: '#cc3333', chromaCurve: 'natural', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('red', { baseColor: '#cc3333' }, STOPS);
     const json = exportRampJSON(ramp);
     // Pretty-printed JSON starts with {\n  "
     expect(json).toMatch(/^\{\n {2}"/);
   });
 
   it('round-trips the ramp data faithfully', () => {
-    const ramp = generateRamp('green', { baseColor: '#33cc66', chromaCurve: 'linear', hueShift: 10 }, STOPS);
+    const ramp = generateRamp('green', { baseColor: '#33cc66' }, STOPS, 'linear');
     const json = exportRampJSON(ramp);
     const parsed = JSON.parse(json);
     expect(parsed.params.baseColor).toBe('#33cc66');
-    expect(parsed.params.chromaCurve).toBe('linear');
-    expect(parsed.params.hueShift).toBe(10);
   });
 });
 
 describe('exportTokensJSON', () => {
   it('exports resolved tokens as valid JSON', () => {
-    const ramp = generateRamp('blue', { baseColor: '#3366cc', chromaCurve: 'natural', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('blue', { baseColor: '#3366cc' }, STOPS);
     const tokens: TokenDefinition[] = [
       {
         name: '--primary',
@@ -56,7 +54,7 @@ describe('exportTokensJSON', () => {
   });
 
   it('exports multiple tokens', () => {
-    const ramp = generateRamp('blue', { baseColor: '#3366cc', chromaCurve: 'natural', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('blue', { baseColor: '#3366cc' }, STOPS);
     const tokens: TokenDefinition[] = [
       {
         name: '--primary',

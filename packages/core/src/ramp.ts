@@ -9,7 +9,7 @@
 import { converter, formatHex } from 'culori';
 import type { Oklch } from 'culori';
 import { parseColor, clampToSrgb } from './oklch.js';
-import type { RampParams, Ramp, RampStop, StopDefinition, Color } from './types.js';
+import type { RampParams, Ramp, RampStop, StopDefinition, Color, ChromaCurve } from './types.js';
 
 const toRgb = converter('rgb');
 
@@ -26,10 +26,13 @@ const LINEAR_SCALES = [0.10, 0.28, 0.46, 0.64, 0.82, 1.00, 0.91, 0.82, 0.73, 0.5
 /** Flat curve — uniform chroma, gamut clamping reduces at extremes */
 const FLAT_SCALES = [1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00];
 
+/** Default hue shift in degrees when autoHueShift is enabled */
+export const AUTO_HUE_SHIFT_DEGREES = 10;
+
 /**
  * Get the chroma scale factors for a given curve type.
  */
-function getChromaScales(curve: RampParams['chromaCurve']): readonly number[] {
+function getChromaScales(curve: ChromaCurve): readonly number[] {
   switch (curve) {
     case 'natural': return NATURAL_SCALES;
     case 'linear': return LINEAR_SCALES;
@@ -104,17 +107,25 @@ function findClosestStopId(lightness: number, stops: StopDefinition[]): number {
  * 2. Detect achromatic (C < 0.001) — force hue to 0
  * 3. Find closest stop by lightness → baseStopId
  * 4. For each stop definition:
- *    - Use the stop's lightness target (or baseLightness if at base stop)
+ *    - Use the stop's lightness target
  *    - Scale chroma by curve factor x base chroma
- *    - Apply hue shift (linear interpolation across stop range)
+ *    - Apply hue shift when autoHueShift is enabled (linear interpolation)
  *    - Gamut clamp via clampToSrgb (reduce chroma, preserve lightness)
  *    - Build full Color object
  * 5. Return Ramp with name, params, stops, and baseStopId
+ *
+ * @param name - Name for the ramp
+ * @param params - Ramp parameters (baseColor)
+ * @param stops - Stop definitions from preset
+ * @param chromaCurve - Chroma distribution curve (default: 'natural')
+ * @param autoHueShift - Whether to apply automatic hue shift (default: false)
  */
 export function generateRamp(
   name: string,
   params: RampParams,
   stops: StopDefinition[],
+  chromaCurve: ChromaCurve = 'natural',
+  autoHueShift: boolean = false,
 ): Ramp {
   const baseOklch = parseColor(params.baseColor);
   if (!baseOklch) {
@@ -128,22 +139,20 @@ export function generateRamp(
   // Find which stop the base color is closest to by lightness
   const baseStopId = findClosestStopId(baseOklch.l, stops);
 
-  const chromaScales = getChromaScales(params.chromaCurve);
+  const chromaScales = getChromaScales(chromaCurve);
   const lastIndex = stops.length - 1;
 
   const rampStops: RampStop[] = stops.map((stopDef, index) => {
-    // Lightness: use baseLightness override if this is the base stop
-    const lightness =
-      params.baseLightness !== undefined && stopDef.id === baseStopId
-        ? params.baseLightness
-        : stopDef.lightness;
+    // Lightness: always use the stop definition's fixed target
+    const lightness = stopDef.lightness;
 
     // Chroma: scale base chroma by the curve factor
     const chroma = baseChroma * chromaScales[index];
 
-    // Hue: linear interpolation from -hueShift/2 at lightest to +hueShift/2 at darkest
+    // Hue: apply shift only when autoHueShift is enabled
+    const hueShiftAmount = autoHueShift ? AUTO_HUE_SHIFT_DEGREES : 0;
     const hueOffset = lastIndex > 0
-      ? -params.hueShift / 2 + (params.hueShift * index) / lastIndex
+      ? -hueShiftAmount / 2 + (hueShiftAmount * index) / lastIndex
       : 0;
     const hue = isAchromatic ? 0 : baseHue + hueOffset;
 
@@ -162,4 +171,40 @@ export function generateRamp(
     stops: rampStops,
     baseStopId,
   };
+}
+
+/**
+ * Compute the hex color of the base stop in a generated ramp.
+ *
+ * This shows what the base color would look like after being processed
+ * through the ramp algorithm (lightness target + chroma curve). Useful
+ * for suggesting a "fit" color to users.
+ *
+ * @param baseColor - Input color string (hex, oklch, etc.)
+ * @param stops - Stop definitions from preset
+ * @param chromaCurve - Chroma distribution curve
+ * @returns Hex string of the base stop, or null if baseColor is invalid
+ */
+export function computeBaseStopHex(
+  baseColor: string,
+  stops: StopDefinition[],
+  chromaCurve: ChromaCurve,
+): string | null {
+  const baseOklch = parseColor(baseColor);
+  if (!baseOklch) return null;
+
+  const baseStopId = findClosestStopId(baseOklch.l, stops);
+  const stopDef = stops.find(s => s.id === baseStopId);
+  if (!stopDef) return null;
+
+  const baseChroma = baseOklch.c;
+  const isAchromatic = baseChroma < 0.001;
+  const baseHue = isAchromatic ? 0 : baseOklch.h;
+
+  const chromaScales = getChromaScales(chromaCurve);
+  const stopIndex = stops.findIndex(s => s.id === baseStopId);
+  const chroma = baseChroma * chromaScales[stopIndex];
+
+  const color = oklchToColor(stopDef.lightness, chroma, baseHue);
+  return color.hex;
 }

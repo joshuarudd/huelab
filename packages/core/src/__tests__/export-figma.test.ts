@@ -12,7 +12,7 @@ const STOPS: StopDefinition[] = [
 
 describe('exportFigmaJSON', () => {
   it('emits primitives collection with RGB 0-1 values', () => {
-    const ramp = generateRamp('blue', { baseColor: '#3366cc', chromaCurve: 'natural', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('blue', { baseColor: '#3366cc' }, STOPS);
     const tokens: TokenDefinition[] = [
       { name: '--primary', light: { type: 'ramp', ramp: 'blue', stop: 500 }, dark: { type: 'ramp', ramp: 'blue', stop: 50 } },
     ];
@@ -24,7 +24,7 @@ describe('exportFigmaJSON', () => {
   });
 
   it('emits semantic tokens as aliases when ramp-based', () => {
-    const ramp = generateRamp('blue', { baseColor: '#3366cc', chromaCurve: 'natural', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('blue', { baseColor: '#3366cc' }, STOPS);
     const tokens: TokenDefinition[] = [
       { name: '--primary', light: { type: 'ramp', ramp: 'blue', stop: 500 }, dark: { type: 'ramp', ramp: 'blue', stop: 50 } },
     ];
@@ -34,7 +34,7 @@ describe('exportFigmaJSON', () => {
   });
 
   it('includes codeSyntax when enabled', () => {
-    const ramp = generateRamp('blue', { baseColor: '#3366cc', chromaCurve: 'natural', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('blue', { baseColor: '#3366cc' }, STOPS);
     const tokens: TokenDefinition[] = [
       { name: '--primary', light: { type: 'ramp', ramp: 'blue', stop: 500 }, dark: { type: 'ramp', ramp: 'blue', stop: 50 } },
     ];

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { generateRamp } from '../ramp.js';
+import { generateRamp, computeBaseStopHex, AUTO_HUE_SHIFT_DEGREES } from '../ramp.js';
 import type { StopDefinition } from '../types.js';
 
 // Use the Tailwind stops from the shadcn preset
@@ -19,24 +19,24 @@ const STOPS: StopDefinition[] = [
 
 describe('generateRamp', () => {
   it('generates correct number of stops', () => {
-    const ramp = generateRamp('slate-blue', { baseColor: '#2c4c60', chromaCurve: 'natural', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('slate-blue', { baseColor: '#2c4c60' }, STOPS);
     expect(ramp.stops).toHaveLength(11);
   });
 
   it('stop IDs match definitions', () => {
-    const ramp = generateRamp('test', { baseColor: '#ff0000', chromaCurve: 'natural', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('test', { baseColor: '#ff0000' }, STOPS);
     expect(ramp.stops.map(s => s.id)).toEqual([50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]);
   });
 
   it('lightness decreases monotonically', () => {
-    const ramp = generateRamp('test', { baseColor: '#3366cc', chromaCurve: 'natural', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('test', { baseColor: '#3366cc' }, STOPS);
     for (let i = 1; i < ramp.stops.length; i++) {
       expect(ramp.stops[i].color.oklch.l).toBeLessThan(ramp.stops[i - 1].color.oklch.l);
     }
   });
 
   it('all stops are in sRGB gamut', () => {
-    const ramp = generateRamp('test', { baseColor: 'oklch(60% 0.3 150)', chromaCurve: 'natural', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('test', { baseColor: 'oklch(60% 0.3 150)' }, STOPS);
     for (const stop of ramp.stops) {
       expect(stop.color.rgb.r).toBeGreaterThanOrEqual(0);
       expect(stop.color.rgb.r).toBeLessThanOrEqual(255);
@@ -48,7 +48,7 @@ describe('generateRamp', () => {
   });
 
   it('natural curve peaks chroma at midtones', () => {
-    const ramp = generateRamp('test', { baseColor: '#3366cc', chromaCurve: 'natural', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('test', { baseColor: '#3366cc' }, STOPS, 'natural');
     const stop50 = ramp.stops[0];
     const stop500 = ramp.stops[5];
     const stop950 = ramp.stops[10];
@@ -57,7 +57,7 @@ describe('generateRamp', () => {
   });
 
   it('flat curve has uniform chroma (before gamut clamp)', () => {
-    const ramp = generateRamp('test', { baseColor: '#666666', chromaCurve: 'flat', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('test', { baseColor: '#666666' }, STOPS, 'flat');
     // Flat curve on a low-chroma input: all stops should have similar chroma
     const chromas = ramp.stops.map(s => s.color.oklch.c);
     const maxC = Math.max(...chromas);
@@ -65,23 +65,29 @@ describe('generateRamp', () => {
     expect(maxC - minC).toBeLessThan(0.02); // Nearly uniform for low-chroma input
   });
 
-  it('applies hue shift across lightness range', () => {
-    const ramp = generateRamp('test', { baseColor: 'oklch(50% 0.15 200)', chromaCurve: 'natural', hueShift: 20 }, STOPS);
+  it('applies auto hue shift across lightness range', () => {
+    const ramp = generateRamp('test', { baseColor: 'oklch(50% 0.15 200)' }, STOPS, 'natural', true);
     const lightest = ramp.stops[0].color.oklch.h;
     const darkest = ramp.stops[10].color.oklch.h;
-    // Hue should shift across the range (lightest and darkest should differ)
     expect(Math.abs(darkest - lightest)).toBeGreaterThan(5);
   });
 
+  it('does not shift hue when autoHueShift is off', () => {
+    const ramp = generateRamp('test', { baseColor: 'oklch(50% 0.15 200)' }, STOPS, 'natural', false);
+    const lightest = ramp.stops[0].color.oklch.h;
+    const darkest = ramp.stops[10].color.oklch.h;
+    expect(Math.abs(darkest - lightest)).toBeLessThan(1);
+  });
+
   it('achromatic input forces hue to 0', () => {
-    const ramp = generateRamp('neutral', { baseColor: '#808080', chromaCurve: 'flat', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('neutral', { baseColor: '#808080' }, STOPS, 'flat');
     for (const stop of ramp.stops) {
       expect(stop.color.oklch.h).toBe(0);
     }
   });
 
   it('stops are not overridden by default', () => {
-    const ramp = generateRamp('test', { baseColor: '#ff0000', chromaCurve: 'natural', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('test', { baseColor: '#ff0000' }, STOPS);
     for (const stop of ramp.stops) {
       expect(stop.overridden).toBe(false);
     }
@@ -89,18 +95,29 @@ describe('generateRamp', () => {
 
   it('finds closest base stop', () => {
     // #2c4c60 has L ~0.38, closest to stop 800 (L=0.37)
-    const ramp = generateRamp('test', { baseColor: '#2c4c60', chromaCurve: 'natural', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('test', { baseColor: '#2c4c60' }, STOPS);
     expect(ramp.baseStopId).toBe(800);
   });
 
-  it('applies baseLightness override at base stop', () => {
+  it('all stops use their fixed lightness targets', () => {
     const ramp = generateRamp('test', {
-      baseColor: 'oklch(66% 0.19 30)', // Tomato-like
-      chromaCurve: 'natural',
-      hueShift: 0,
-      baseLightness: 0.59,
+      baseColor: 'oklch(66% 0.19 30)',
     }, STOPS);
-    const baseStop = ramp.stops.find(s => s.id === ramp.baseStopId);
-    expect(baseStop!.color.oklch.l).toBeCloseTo(0.59, 1);
+    for (let i = 0; i < ramp.stops.length; i++) {
+      expect(ramp.stops[i].color.oklch.l).toBeCloseTo(STOPS[i].lightness, 1);
+    }
+  });
+});
+
+describe('computeBaseStopHex', () => {
+  it('returns the hex of the base stop in the generated ramp', () => {
+    const hex = computeBaseStopHex('#3366cc', STOPS, 'natural');
+    expect(hex).not.toBe('#3366cc');
+    expect(hex).toMatch(/^#[0-9a-f]{6}$/);
+  });
+
+  it('returns null for an invalid color', () => {
+    const hex = computeBaseStopHex('not-a-color', STOPS, 'natural');
+    expect(hex).toBeNull();
   });
 });

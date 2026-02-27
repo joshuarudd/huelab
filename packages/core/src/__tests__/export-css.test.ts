@@ -12,7 +12,7 @@ const STOPS: StopDefinition[] = [
 
 describe('exportPrimitivesCSS', () => {
   it('emits @theme block with --color-{name}-{stop} variables', () => {
-    const ramp = generateRamp('blue', { baseColor: '#3366cc', chromaCurve: 'natural', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('blue', { baseColor: '#3366cc' }, STOPS);
     const css = exportPrimitivesCSS([ramp]);
     expect(css).toContain('@theme');
     expect(css).toContain('--color-blue-50');
@@ -22,15 +22,15 @@ describe('exportPrimitivesCSS', () => {
   });
 
   it('emits variables for multiple ramps', () => {
-    const blue = generateRamp('blue', { baseColor: '#3366cc', chromaCurve: 'natural', hueShift: 0 }, STOPS);
-    const red = generateRamp('red', { baseColor: '#cc3333', chromaCurve: 'natural', hueShift: 0 }, STOPS);
+    const blue = generateRamp('blue', { baseColor: '#3366cc' }, STOPS);
+    const red = generateRamp('red', { baseColor: '#cc3333' }, STOPS);
     const css = exportPrimitivesCSS([blue, red]);
     expect(css).toContain('--color-blue-500');
     expect(css).toContain('--color-red-500');
   });
 
   it('wraps output in a single @theme block', () => {
-    const ramp = generateRamp('blue', { baseColor: '#3366cc', chromaCurve: 'natural', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('blue', { baseColor: '#3366cc' }, STOPS);
     const css = exportPrimitivesCSS([ramp]);
     // Should start with @theme { and end with }
     expect(css.trim()).toMatch(/^@theme\s*\{[\s\S]*\}$/);
@@ -44,7 +44,7 @@ describe('exportPrimitivesCSS', () => {
 
 describe('exportSemanticCSS', () => {
   it('emits :root and .dark blocks', () => {
-    const ramp = generateRamp('blue', { baseColor: '#3366cc', chromaCurve: 'natural', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('blue', { baseColor: '#3366cc' }, STOPS);
     const tokens: TokenDefinition[] = [
       { name: '--primary', light: { type: 'ramp', ramp: 'blue', stop: 500 }, dark: { type: 'ramp', ramp: 'blue', stop: 50 } },
     ];
@@ -71,7 +71,7 @@ describe('exportSemanticCSS', () => {
   });
 
   it('handles mixed ramp and literal tokens', () => {
-    const ramp = generateRamp('blue', { baseColor: '#3366cc', chromaCurve: 'natural', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('blue', { baseColor: '#3366cc' }, STOPS);
     const tokens: TokenDefinition[] = [
       { name: '--primary', light: { type: 'ramp', ramp: 'blue', stop: 500 }, dark: { type: 'ramp', ramp: 'blue', stop: 50 } },
       { name: '--background', light: { type: 'literal', value: '#ffffff' }, dark: { type: 'literal', value: '#000000' } },

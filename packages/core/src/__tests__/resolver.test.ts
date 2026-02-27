@@ -12,7 +12,7 @@ const STOPS: StopDefinition[] = [
 
 describe('resolveTokens', () => {
   it('resolves ramp-based token to concrete color', () => {
-    const ramp = generateRamp('blue', { baseColor: '#3366cc', chromaCurve: 'natural', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('blue', { baseColor: '#3366cc' }, STOPS);
     const tokens: TokenDefinition[] = [{
       name: '--primary',
       light: { type: 'ramp', ramp: 'blue', stop: 800 },

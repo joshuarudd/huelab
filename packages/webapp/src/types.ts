@@ -15,7 +15,14 @@ import type {
   TokenSource,
   ResolvedToken,
   AuditReport,
+  ChromaCurve,
 } from '@huelab/core';
+
+/** System-wide settings that apply to all ramps */
+export interface SystemSettings {
+  chromaCurve: ChromaCurve;
+  autoHueShift: boolean;
+}
 
 /** The full project state managed by useReducer */
 export interface ProjectState {
@@ -24,6 +31,7 @@ export interface ProjectState {
   tokenMapping: TokenDefinition[];
   preset: Preset;
   mode: 'light' | 'dark';
+  systemSettings: SystemSettings;
 }
 
 /** All actions the project reducer can handle */
@@ -39,7 +47,9 @@ export type ProjectAction =
   | { type: 'SET_TOKEN_SOURCE'; tokenName: string; mode: 'light' | 'dark'; source: TokenSource }
   | { type: 'SET_TOKEN_MAPPING'; tokens: TokenDefinition[] }
   | { type: 'SET_PRESET'; preset: Preset }
-  | { type: 'TOGGLE_MODE' };
+  | { type: 'TOGGLE_MODE' }
+  | { type: 'SET_CHROMA_CURVE'; curve: ChromaCurve }
+  | { type: 'SET_AUTO_HUE_SHIFT'; enabled: boolean };
 
 /** The context value exposed by ProjectProvider */
 export interface ProjectContextValue {

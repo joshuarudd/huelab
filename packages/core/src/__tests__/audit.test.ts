@@ -13,7 +13,7 @@ const STOPS: StopDefinition[] = [
 
 describe('auditTokenPairs', () => {
   it('passes for high-contrast pair', () => {
-    const ramp = generateRamp('blue', { baseColor: '#3366cc', chromaCurve: 'natural', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('blue', { baseColor: '#3366cc' }, STOPS);
     const tokens: TokenDefinition[] = [
       { name: '--primary', light: { type: 'ramp', ramp: 'blue', stop: 800 }, dark: { type: 'ramp', ramp: 'blue', stop: 500 } },
       { name: '--primary-fg', light: { type: 'literal', value: '#ffffff' }, dark: { type: 'literal', value: '#ffffff' } },
@@ -28,7 +28,7 @@ describe('auditTokenPairs', () => {
   });
 
   it('fails for low-contrast pair', () => {
-    const ramp = generateRamp('gray', { baseColor: '#808080', chromaCurve: 'flat', hueShift: 0 }, STOPS);
+    const ramp = generateRamp('gray', { baseColor: '#808080' }, STOPS, 'flat');
     const tokens: TokenDefinition[] = [
       { name: '--muted', light: { type: 'ramp', ramp: 'gray', stop: 500 }, dark: { type: 'ramp', ramp: 'gray', stop: 500 } },
       { name: '--muted-fg', light: { type: 'ramp', ramp: 'gray', stop: 800 }, dark: { type: 'ramp', ramp: 'gray', stop: 800 } },
