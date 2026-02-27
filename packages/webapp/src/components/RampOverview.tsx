@@ -45,7 +45,7 @@ export function RampOverview() {
     dispatch({
       type: 'ADD_RAMP',
       name,
-      params: { baseColor, chromaCurve: 'natural', hueShift: 0 },
+      params: { baseColor },
     });
   }, [dispatch, state.ramps]);
 

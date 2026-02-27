@@ -27,8 +27,8 @@ import {
   auditTokenPairs,
 } from '@huelab/core';
 import { shadcnPreset } from '@huelab/preset-shadcn';
-import type { ProjectState, ProjectAction, ProjectContextValue } from './types.js';
-import type { AuditReport, TokenSource } from '@huelab/core';
+import type { ProjectState, ProjectAction, ProjectContextValue, SystemSettings } from './types.js';
+import type { AuditReport, ChromaCurve, Ramp, StopDefinition, TokenSource } from '@huelab/core';
 
 // ---------------------------------------------------------------------------
 // Initial state
@@ -40,6 +40,10 @@ const initialState: ProjectState = {
   tokenMapping: [...shadcnPreset.tokenSchema.defaultMapping],
   preset: shadcnPreset,
   mode: 'light',
+  systemSettings: {
+    chromaCurve: 'natural',
+    autoHueShift: true,
+  },
 };
 
 // ---------------------------------------------------------------------------
@@ -55,6 +59,33 @@ const EMPTY_AUDIT_REPORT: AuditReport = {
     failures: [],
   },
 };
+
+// ---------------------------------------------------------------------------
+// Helper — regenerate all ramps with new system settings
+// ---------------------------------------------------------------------------
+
+function regenerateAllRamps(
+  ramps: Ramp[],
+  stops: StopDefinition[],
+  settings: { chromaCurve: ChromaCurve; autoHueShift: boolean },
+): Ramp[] {
+  return ramps.map(ramp => {
+    const regenerated = generateRamp(
+      ramp.name,
+      ramp.params,
+      stops,
+      settings.chromaCurve,
+      settings.autoHueShift,
+    );
+    let result = regenerated;
+    for (const stop of ramp.stops) {
+      if (stop.overridden && stop.overrides) {
+        result = applyOverride(result, stop.id, stop.overrides, stops);
+      }
+    }
+    return result;
+  });
+}
 
 // ---------------------------------------------------------------------------
 // Reducer
@@ -76,7 +107,7 @@ export function projectReducer(
 
     case 'ADD_RAMP': {
       const stops = getStops(state.preset);
-      const newRamp = generateRamp(action.name, action.params, stops);
+      const newRamp = generateRamp(action.name, action.params, stops, state.systemSettings.chromaCurve, state.systemSettings.autoHueShift);
       return {
         ...state,
         ramps: [...state.ramps, newRamp],
@@ -117,7 +148,7 @@ export function projectReducer(
       }
       const stops = getStops(state.preset);
       const existingRamp = state.ramps[action.index];
-      const updatedRamp = generateRamp(existingRamp.name, action.params, stops);
+      const updatedRamp = generateRamp(existingRamp.name, action.params, stops, state.systemSettings.chromaCurve, state.systemSettings.autoHueShift);
       // Re-apply any existing overrides from the old ramp
       let rampWithOverrides = updatedRamp;
       for (const stop of existingRamp.stops) {
@@ -251,6 +282,24 @@ export function projectReducer(
         ...state,
         mode: state.mode === 'light' ? 'dark' : 'light',
       };
+
+    case 'SET_CHROMA_CURVE': {
+      const newSettings = { ...state.systemSettings, chromaCurve: action.curve };
+      return {
+        ...state,
+        systemSettings: newSettings,
+        ramps: regenerateAllRamps(state.ramps, getStops(state.preset), newSettings),
+      };
+    }
+
+    case 'SET_AUTO_HUE_SHIFT': {
+      const newSettings = { ...state.systemSettings, autoHueShift: action.enabled };
+      return {
+        ...state,
+        systemSettings: newSettings,
+        ramps: regenerateAllRamps(state.ramps, getStops(state.preset), newSettings),
+      };
+    }
 
     default:
       return state;

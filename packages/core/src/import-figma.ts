@@ -202,8 +202,6 @@ function parsePrimitives(primitives: Record<string, unknown>): Ramp[] {
       name,
       params: {
         baseColor: baseHex,
-        chromaCurve: 'natural',
-        hueShift: 0,
       },
       stops,
       baseStopId,

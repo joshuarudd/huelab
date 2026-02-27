@@ -10,9 +10,8 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useProject } from '../store.js';
 import { ColorPicker } from './ColorPicker.js';
-import { ParamSliders } from './ParamSliders.js';
 import { StopStrip } from './StopStrip.js';
-import { hueToName, parseColor, type RampParams, type OklchColor } from '@huelab/core';
+import { hueToName, parseColor, computeBaseStopHex, getStops, type OklchColor } from '@huelab/core';
 
 export function RampEditor() {
   const { state, dispatch } = useProject();
@@ -35,17 +34,6 @@ export function RampEditor() {
       });
     },
     [ramp, state.selectedRampIndex, dispatch],
-  );
-
-  const handleParamsChange = useCallback(
-    (params: RampParams) => {
-      dispatch({
-        type: 'UPDATE_RAMP_PARAMS',
-        index: state.selectedRampIndex,
-        params,
-      });
-    },
-    [state.selectedRampIndex, dispatch],
   );
 
   const handleOverride = useCallback(
@@ -112,6 +100,28 @@ export function RampEditor() {
       name: suggestedName,
     });
   }, [suggestedName, ramp, state.selectedRampIndex, dispatch]);
+
+  // Suggested base color: show the hex that the base stop actually resolves to
+  const suggestedBaseHex = useMemo(() => {
+    if (!ramp) return null;
+    const stops = getStops(state.preset);
+    const computed = computeBaseStopHex(
+      ramp.params.baseColor,
+      stops,
+      state.systemSettings.chromaCurve,
+    );
+    if (!computed || computed === ramp.params.baseColor) return null;
+    return computed;
+  }, [ramp, state.preset, state.systemSettings.chromaCurve]);
+
+  const handleAcceptBaseColor = useCallback(() => {
+    if (!suggestedBaseHex || !ramp) return;
+    dispatch({
+      type: 'UPDATE_RAMP_PARAMS',
+      index: state.selectedRampIndex,
+      params: { baseColor: suggestedBaseHex },
+    });
+  }, [suggestedBaseHex, ramp, state.selectedRampIndex, dispatch]);
 
   // -------------------------------------------------------------------------
   // Empty state: no ramps loaded yet
@@ -180,12 +190,20 @@ export function RampEditor() {
         onChange={handleBaseColorChange}
         label="Base Color"
       />
-
-      {/* Ramp parameters */}
-      <ParamSliders
-        params={ramp.params}
-        onChange={handleParamsChange}
-      />
+      {suggestedBaseHex && (
+        <p className="text-xs text-neutral-400">
+          Maps to stop {ramp.baseStopId} as{' '}
+          <span className="font-mono text-neutral-300">{suggestedBaseHex}</span>
+          {' \u2014 '}
+          <button
+            type="button"
+            onClick={handleAcceptBaseColor}
+            className="text-blue-400 hover:text-blue-300 transition-colors"
+          >
+            Use {suggestedBaseHex}
+          </button>
+        </p>
+      )}
 
       {/* Divider */}
       <hr className="border-neutral-800" />

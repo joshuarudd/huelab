@@ -173,8 +173,6 @@ function cssRampsToRamps(
       cssRamp.name,
       {
         baseColor,
-        chromaCurve: 'natural',
-        hueShift: 0,
       },
       stops,
     );
