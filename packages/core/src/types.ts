@@ -32,12 +32,12 @@ export interface RampStop {
   overrides?: Partial<OklchColor>; // which components are overridden
 }
 
+/** Chroma curve type for ramp generation */
+export type ChromaCurve = 'natural' | 'linear' | 'flat';
+
 /** Parameters that control ramp generation */
 export interface RampParams {
   baseColor: string; // Input color (hex, oklch, etc.)
-  chromaCurve: 'natural' | 'linear' | 'flat';
-  hueShift: number; // Degrees of hue shift across the ramp
-  baseLightness?: number; // Override lightness at the base stop
 }
 
 /** A complete color ramp */
@@ -163,7 +163,7 @@ export interface Preset {
 
 /** Parsed result from importing CSS */
 export interface CSSImportResult {
-  ramps: Ramp[];
+  ramps: Array<{ name: string; stops: Array<{ id: number; value: string }> }>;
   tokens: {
     light: Record<string, string>; // token name -> CSS value
     dark: Record<string, string>;

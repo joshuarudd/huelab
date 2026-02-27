@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "npm run dev --workspace=@huelab/webapp",
     "build": "npm run build --workspace=@huelab/core && npm run build --workspace=@huelab/preset-shadcn && npm run build --workspace=@huelab/webapp",
+    "test": "npm test --workspace=@huelab/core",
     "typecheck": "tsc --build"
   },
   "engines": {
