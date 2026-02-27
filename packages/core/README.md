@@ -33,14 +33,17 @@ const stops = [
   { id: 950, label: '950', lightness: 0.17 },
 ];
 
-const ramp = generateRamp('blue', {
-  baseColor: '#2563eb',
-  chromaCurve: 'natural',
-  hueShift: 0,
-}, stops);
+const ramp = generateRamp('blue', { baseColor: '#2563eb' }, stops, 'natural');
 
 // ramp.stops[0].color.hex  → "#fefeff"
 // ramp.stops[5].color.hex  → a mid-lightness blue
+
+// Enable automatic hue shift (warm darks, cool lights)
+const shifted = generateRamp('blue', { baseColor: '#2563eb' }, stops, 'natural', true);
+
+// Preview what the base color looks like at its closest stop
+import { computeBaseStopHex } from '@huelab/core';
+const hex = computeBaseStopHex('#2563eb', stops, 'natural'); // → "#4568e8"
 ```
 
 ### Check contrast
@@ -107,7 +110,7 @@ report.summary.failures;    // pairs that fail in light or dark mode
 | `oklch` | `parseColor`, `toColor`, `toHex`, `clampToSrgb`, `formatOklchCss`, `isInGamut`, `hueDifference` |
 | `contrast` | `checkContrast`, `wcagRatio`, `apcaLc`, `AA_THRESHOLDS` |
 | `distance` | `deltaEOK`, `oklchComponents` |
-| `ramp` | `generateRamp` |
+| `ramp` | `generateRamp`, `computeBaseStopHex`, `AUTO_HUE_SHIFT_DEGREES` |
 | `overrides` | `applyOverride`, `clearOverride`, `clearAllOverrides` |
 | `tokens` | `rampSource`, `literalSource` |
 | `resolver` | `resolveTokens` |
@@ -118,6 +121,15 @@ report.summary.failures;    // pairs that fail in light or dark mode
 | `import-css` | `importCSS` |
 | `import-figma` | `importFigmaJSON` |
 | `preset` | `validatePreset`, `getStops` |
+| `types` | `OklchColor`, `Color`, `Ramp`, `RampParams`, `RampStop`, `StopDefinition`, `ChromaCurve`, `ContrastResult`, `TokenDefinition`, `TokenPairDefinition`, `ResolvedToken`, `AuditReport`, `Preset`, ... |
+
+### Key types
+
+- **`ChromaCurve`** — `'natural' | 'linear' | 'flat'` — chroma distribution curve for ramp generation
+- **`RampParams`** — `{ baseColor: string }` — simplified ramp parameters (chroma curve and hue shift are now separate arguments to `generateRamp`)
+- **`generateRamp(name, params, stops, chromaCurve?, autoHueShift?)`** — generates an 11-stop OKLCH ramp. `chromaCurve` defaults to `'natural'`, `autoHueShift` defaults to `false`.
+- **`computeBaseStopHex(baseColor, stops, chromaCurve)`** — returns the hex color of the base stop after algorithm processing (lightness target + chroma curve)
+- **`AUTO_HUE_SHIFT_DEGREES`** — default hue shift amount (10 degrees) when `autoHueShift` is enabled
 
 ## License
 
