@@ -14,6 +14,7 @@
 import {
   createContext,
   useContext,
+  useEffect,
   useReducer,
   useMemo,
   type ReactNode,
@@ -31,20 +32,51 @@ import type { ProjectState, ProjectAction, ProjectContextValue, SystemSettings }
 import type { AuditReport, ChromaCurve, Ramp, StopDefinition, TokenSource } from '@huelab/core';
 
 // ---------------------------------------------------------------------------
+// localStorage persistence
+// ---------------------------------------------------------------------------
+
+const STORAGE_KEY = 'huelab:project';
+const STORAGE_VERSION = 1;
+
+interface StorageEnvelope {
+  version: number;
+  state: ProjectState;
+}
+
+/**
+ * Load persisted state from localStorage.
+ * Returns the stored ProjectState if valid, or null to use defaults.
+ */
+function loadState(): ProjectState | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const envelope: StorageEnvelope = JSON.parse(raw);
+    if (envelope.version !== STORAGE_VERSION) return null;
+    return envelope.state;
+  } catch {
+    console.warn('huelab: failed to load saved state, using defaults');
+    return null;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Initial state
 // ---------------------------------------------------------------------------
 
-const initialState: ProjectState = {
+const defaultState: ProjectState = {
   ramps: [],
   selectedRampIndex: 0,
   tokenMapping: [...shadcnPreset.tokenSchema.defaultMapping],
   preset: shadcnPreset,
-  mode: 'light',
+  mode: 'dark',
   systemSettings: {
     chromaCurve: 'natural',
     autoHueShift: true,
   },
 };
+
+const initialState: ProjectState = loadState() ?? defaultState;
 
 // ---------------------------------------------------------------------------
 // Empty audit report (used when resolution fails or no data)
@@ -318,6 +350,11 @@ const ProjectContext = createContext<ProjectContextValue | null>(null);
 
 export function ProjectProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(projectReducer, initialState);
+
+  // Sync mode to DOM so CSS custom properties switch via .dark class
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', state.mode === 'dark');
+  }, [state.mode]);
 
   // Derived state: resolve tokens against current ramps
   const resolvedTokens = useMemo(() => {
