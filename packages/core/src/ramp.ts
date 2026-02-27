@@ -142,12 +142,19 @@ export function generateRamp(
   const chromaScales = getChromaScales(chromaCurve);
   const lastIndex = stops.length - 1;
 
+  // Normalize chroma so the base stop gets the exact base chroma.
+  // The curve shape is preserved — we just shift it so the peak aligns
+  // with the base stop rather than always at stop 500 (index 5).
+  const baseStopIndex = stops.findIndex(s => s.id === baseStopId);
+  const baseScale = chromaScales[baseStopIndex];
+  const effectiveMaxChroma = baseScale > 0 ? baseChroma / baseScale : baseChroma;
+
   const rampStops: RampStop[] = stops.map((stopDef, index) => {
     // Lightness: always use the stop definition's fixed target
     const lightness = stopDef.lightness;
 
-    // Chroma: scale base chroma by the curve factor
-    const chroma = baseChroma * chromaScales[index];
+    // Chroma: scale from effective max so base stop matches base color
+    const chroma = effectiveMaxChroma * chromaScales[index];
 
     // Hue: apply shift only when autoHueShift is enabled
     const hueShiftAmount = autoHueShift ? AUTO_HUE_SHIFT_DEGREES : 0;
@@ -174,21 +181,27 @@ export function generateRamp(
 }
 
 /**
- * Compute the hex color of the base stop in a generated ramp.
+ * Compute the hex color that a base color would become when adjusted to
+ * fit the closest stop's lightness target. Useful for suggesting a "fit"
+ * base color to users.
  *
- * This shows what the base color would look like after being processed
- * through the ramp algorithm (lightness target + chroma curve). Useful
- * for suggesting a "fit" color to users.
+ * The result is idempotent: feeding the output back in produces the same
+ * output, so accepting the suggestion never triggers a new suggestion.
+ *
+ * Note: chroma is NOT scaled by the curve factor here. The chroma curve
+ * is the ramp algorithm's concern — it distributes chroma across stops.
+ * This function only adjusts lightness to match the stop target while
+ * preserving the base color's hue and chroma (gamut-clamped).
  *
  * @param baseColor - Input color string (hex, oklch, etc.)
  * @param stops - Stop definitions from preset
- * @param chromaCurve - Chroma distribution curve
- * @returns Hex string of the base stop, or null if baseColor is invalid
+ * @param _chromaCurve - Chroma distribution curve (unused, kept for API compat)
+ * @returns Hex string of the fit base color, or null if baseColor is invalid
  */
 export function computeBaseStopHex(
   baseColor: string,
   stops: StopDefinition[],
-  chromaCurve: ChromaCurve,
+  _chromaCurve: ChromaCurve,
 ): string | null {
   const baseOklch = parseColor(baseColor);
   if (!baseOklch) return null;
@@ -201,10 +214,6 @@ export function computeBaseStopHex(
   const isAchromatic = baseChroma < 0.001;
   const baseHue = isAchromatic ? 0 : baseOklch.h;
 
-  const chromaScales = getChromaScales(chromaCurve);
-  const stopIndex = stops.findIndex(s => s.id === baseStopId);
-  const chroma = baseChroma * chromaScales[stopIndex];
-
-  const color = oklchToColor(stopDef.lightness, chroma, baseHue);
+  const color = oklchToColor(stopDef.lightness, baseChroma, baseHue);
   return color.hex;
 }

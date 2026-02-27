@@ -192,7 +192,7 @@ export function RampEditor() {
       />
       {suggestedBaseHex && (
         <p className="text-xs text-neutral-400">
-          Maps to stop {ramp.baseStopId} as{' '}
+          Best fit at stop {ramp.baseStopId}:{' '}
           <span className="font-mono text-neutral-300">{suggestedBaseHex}</span>
           {' \u2014 '}
           <button

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { generateRamp, computeBaseStopHex, AUTO_HUE_SHIFT_DEGREES } from '../ramp.js';
+import { parseColor } from '../oklch.js';
 import type { StopDefinition } from '../types.js';
 
 // Use the Tailwind stops from the shadcn preset
@@ -107,17 +108,41 @@ describe('generateRamp', () => {
       expect(ramp.stops[i].color.oklch.l).toBeCloseTo(STOPS[i].lightness, 1);
     }
   });
+
+  it('base stop chroma matches base color chroma', () => {
+    // #c81600 maps to stop 600 — its chroma should be preserved
+    const ramp = generateRamp('red', { baseColor: '#c81600' }, STOPS, 'natural');
+    const baseStop = ramp.stops.find(s => s.id === ramp.baseStopId)!;
+    const baseOklch = parseColor('#c81600')!;
+    expect(baseStop.color.oklch.c).toBeCloseTo(baseOklch.c, 2);
+  });
 });
 
 describe('computeBaseStopHex', () => {
-  it('returns the hex of the base stop in the generated ramp', () => {
+  it('returns a valid hex string', () => {
     const hex = computeBaseStopHex('#3366cc', STOPS, 'natural');
-    expect(hex).not.toBe('#3366cc');
     expect(hex).toMatch(/^#[0-9a-f]{6}$/);
   });
 
   it('returns null for an invalid color', () => {
     const hex = computeBaseStopHex('not-a-color', STOPS, 'natural');
     expect(hex).toBeNull();
+  });
+
+  it('is idempotent — feeding the result back in produces the same result', () => {
+    const testColors = ['#c32615', '#ff0000', '#cc0000', '#3366cc', '#808080', '#e63946'];
+    for (const color of testColors) {
+      const hex1 = computeBaseStopHex(color, STOPS, 'natural');
+      expect(hex1).not.toBeNull();
+      const hex2 = computeBaseStopHex(hex1!, STOPS, 'natural');
+      expect(hex2).toBe(hex1);
+    }
+  });
+
+  it('preserves hue and chroma, only adjusts lightness to match stop target', () => {
+    // A color whose lightness already matches a stop target should return itself
+    // #c32615 has L≈0.53 which matches stop 600 (L=0.53)
+    const hex = computeBaseStopHex('#c32615', STOPS, 'natural');
+    expect(hex).toBe('#c32615');
   });
 });
