@@ -1,6 +1,6 @@
 {
   "name": "@huelab/core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Accessible color system toolkit — OKLCH ramp generation, WCAG/APCA contrast, token mapping",
   "type": "module",
   "main": "./dist/index.js",
