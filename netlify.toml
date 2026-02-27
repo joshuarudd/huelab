@@ -1,0 +1,12 @@
+[build]
+  command = "npm run build"
+  publish = "packages/webapp/dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# SPA routing — serve index.html for all paths
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
