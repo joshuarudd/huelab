@@ -105,6 +105,7 @@ The core algorithm generates 11-stop OKLCH ramps from a base color:
 
 ## Workflow
 
+- **Always use a git worktree for feature work.** Use the `using-git-worktrees` skill to create an isolated worktree before starting any implementation. This prevents conflicts when multiple agents or sessions work in parallel. Each worktree needs its own `npm install`.
 - Create a feature branch before committing (e.g., `task-1/oklch-module`). PRs for all changes.
 - Follow TDD: failing test → minimal implementation → pass → commit.
 - The implementation plan at `docs/plans/2026-02-24-huelab-implementation-plan.md` defines task ordering and dependencies. Use the `executing-plans` skill to work through it.
