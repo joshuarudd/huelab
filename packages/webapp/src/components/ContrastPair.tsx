@@ -69,11 +69,11 @@ function ModeResult({
   return (
     <div
       className={`flex items-center gap-2 rounded px-2 py-1.5 ${
-        isActive ? 'bg-neutral-800' : 'bg-neutral-900/50 opacity-60'
+        isActive ? 'bg-[var(--app-elevated)]' : 'bg-[var(--app-surface)] opacity-60'
       }`}
     >
       {/* Mode label */}
-      <span className="w-10 shrink-0 text-[10px] font-medium uppercase tracking-wider text-neutral-500">
+      <span className="w-10 shrink-0 text-[10px] font-medium uppercase tracking-wider text-[var(--app-text-muted)]">
         {modeLabel}
       </span>
 
@@ -87,19 +87,19 @@ function ModeResult({
       </div>
 
       {/* WCAG ratio */}
-      <span className="min-w-[52px] text-xs font-mono text-neutral-300">
+      <span className="min-w-[52px] text-xs font-mono text-[var(--app-text-secondary)]">
         {formatRatio(wcagRatio)}
       </span>
 
       {/* APCA Lc */}
-      <span className="min-w-[48px] text-[10px] font-mono text-neutral-500">
+      <span className="min-w-[48px] text-[10px] font-mono text-[var(--app-text-muted)]">
         {formatLc(apcaLc)}
       </span>
 
       {/* Pass/fail badge */}
       <span
         className={`ml-auto shrink-0 text-xs font-semibold ${
-          passes ? 'text-green-400' : 'text-red-400'
+          passes ? 'text-[var(--app-success)]' : 'text-[var(--app-error)]'
         }`}
         aria-label={passes ? 'Pass' : 'Fail'}
       >
@@ -133,14 +133,14 @@ export function ContrastPair({ result, resolvedTokens, activeMode }: ContrastPai
     <div
       className={`rounded-lg border p-3 ${
         anyFailure
-          ? 'border-red-900/50 bg-red-950/20'
-          : 'border-neutral-800 bg-neutral-900/30'
+          ? 'border-[var(--app-error-border)] bg-[var(--app-error-bg)]'
+          : 'border-[var(--app-border)] bg-[var(--app-surface)]'
       }`}
     >
       {/* Pair header */}
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-sm font-medium text-neutral-200">{pair.name}</h3>
-        <span className="text-[10px] text-neutral-600">
+        <h3 className="text-sm font-medium text-[var(--app-text-secondary)]">{pair.name}</h3>
+        <span className="text-[10px] text-[var(--app-text-faint)]">
           {pair.threshold === 'normalText'
             ? '4.5:1'
             : '3:1'}

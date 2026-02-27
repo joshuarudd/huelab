@@ -105,12 +105,12 @@ export function TokenRow({
   }
 
   return (
-    <div className="group flex items-center gap-3 rounded-md px-2 py-1.5 hover:bg-neutral-800/50">
+    <div className="group flex items-center gap-3 rounded-md px-2 py-1.5 hover:bg-[var(--app-elevated)]">
       {/* Token name & description tooltip */}
       <div className="relative w-48 shrink-0">
-        <span className="text-sm font-mono text-neutral-200 truncate block">{tokenName}</span>
+        <span className="text-sm font-mono text-[var(--app-text-secondary)] truncate block">{tokenName}</span>
         {description && (
-          <div className="pointer-events-none absolute left-0 top-full z-30 mt-1 hidden rounded bg-neutral-700 px-2 py-1 text-[11px] text-neutral-300 shadow-lg group-hover:block whitespace-nowrap">
+          <div className="pointer-events-none absolute left-0 top-full z-30 mt-1 hidden rounded bg-[var(--app-hover)] px-2 py-1 text-[11px] text-[var(--app-text-secondary)] shadow-lg group-hover:block whitespace-nowrap">
             {description}
           </div>
         )}
@@ -119,11 +119,11 @@ export function TokenRow({
       {/* Light mode swatch + source */}
       <div className="flex items-center gap-1.5">
         <div
-          className="h-6 w-6 rounded border border-neutral-600 shrink-0"
+          className="h-6 w-6 rounded border border-[var(--app-border-input)] shrink-0"
           style={{ backgroundColor: lightHex }}
           title={`Light: ${lightHex}`}
         />
-        <span className="text-xs text-neutral-400 w-24 truncate" title={lightLabel}>
+        <span className="text-xs text-[var(--app-text-muted)] w-24 truncate" title={lightLabel}>
           {lightLabel}
         </span>
       </div>
@@ -131,23 +131,23 @@ export function TokenRow({
       {/* Dark mode swatch + source */}
       <div className="flex items-center gap-1.5">
         <div
-          className="h-6 w-6 rounded border border-neutral-600 shrink-0"
+          className="h-6 w-6 rounded border border-[var(--app-border-input)] shrink-0"
           style={{ backgroundColor: darkHex }}
           title={`Dark: ${darkHex}`}
         />
-        <span className="text-xs text-neutral-400 w-24 truncate" title={darkLabel}>
+        <span className="text-xs text-[var(--app-text-muted)] w-24 truncate" title={darkLabel}>
           {darkLabel}
         </span>
       </div>
 
       {/* Light source dropdown */}
       <div className="flex items-center gap-1">
-        <label className="text-[10px] uppercase tracking-wider text-neutral-500">L</label>
+        <label className="text-[10px] uppercase tracking-wider text-[var(--app-text-muted)]">L</label>
         {editingMode === 'light' ? (
           <div className="flex items-center gap-1">
             <input
               type="text"
-              className="w-24 rounded border border-neutral-600 bg-neutral-800 px-1.5 py-0.5 text-xs text-neutral-200 focus:border-blue-500 focus:outline-none"
+              className="w-24 rounded border border-[var(--app-border-input)] bg-[var(--app-elevated)] px-1.5 py-0.5 text-xs text-[var(--app-text-secondary)] focus:border-[var(--app-accent)] focus:outline-none"
               placeholder="#hex or oklch()"
               value={literalValue}
               onChange={e => setLiteralValue(e.target.value)}
@@ -158,7 +158,7 @@ export function TokenRow({
               autoFocus
             />
             <button
-              className="rounded bg-neutral-700 px-1.5 py-0.5 text-[10px] text-neutral-300 hover:bg-neutral-600"
+              className="rounded bg-[var(--app-hover)] px-1.5 py-0.5 text-[10px] text-[var(--app-text-secondary)] hover:opacity-80"
               onClick={() => handleLiteralSubmit('light')}
             >
               OK
@@ -166,7 +166,7 @@ export function TokenRow({
           </div>
         ) : (
           <select
-            className="w-32 rounded border border-neutral-700 bg-neutral-800 px-1 py-0.5 text-xs text-neutral-300 focus:border-blue-500 focus:outline-none"
+            className="w-32 rounded border border-[var(--app-border-secondary)] bg-[var(--app-elevated)] px-1 py-0.5 text-xs text-[var(--app-text-secondary)] focus:border-[var(--app-accent)] focus:outline-none"
             value={currentDropdownValue(lightSource)}
             onChange={e => handleDropdownChange('light', e.target.value)}
           >
@@ -185,12 +185,12 @@ export function TokenRow({
 
       {/* Dark source dropdown */}
       <div className="flex items-center gap-1">
-        <label className="text-[10px] uppercase tracking-wider text-neutral-500">D</label>
+        <label className="text-[10px] uppercase tracking-wider text-[var(--app-text-muted)]">D</label>
         {editingMode === 'dark' ? (
           <div className="flex items-center gap-1">
             <input
               type="text"
-              className="w-24 rounded border border-neutral-600 bg-neutral-800 px-1.5 py-0.5 text-xs text-neutral-200 focus:border-blue-500 focus:outline-none"
+              className="w-24 rounded border border-[var(--app-border-input)] bg-[var(--app-elevated)] px-1.5 py-0.5 text-xs text-[var(--app-text-secondary)] focus:border-[var(--app-accent)] focus:outline-none"
               placeholder="#hex or oklch()"
               value={literalValue}
               onChange={e => setLiteralValue(e.target.value)}
@@ -201,7 +201,7 @@ export function TokenRow({
               autoFocus
             />
             <button
-              className="rounded bg-neutral-700 px-1.5 py-0.5 text-[10px] text-neutral-300 hover:bg-neutral-600"
+              className="rounded bg-[var(--app-hover)] px-1.5 py-0.5 text-[10px] text-[var(--app-text-secondary)] hover:opacity-80"
               onClick={() => handleLiteralSubmit('dark')}
             >
               OK
@@ -209,7 +209,7 @@ export function TokenRow({
           </div>
         ) : (
           <select
-            className="w-32 rounded border border-neutral-700 bg-neutral-800 px-1 py-0.5 text-xs text-neutral-300 focus:border-blue-500 focus:outline-none"
+            className="w-32 rounded border border-[var(--app-border-secondary)] bg-[var(--app-elevated)] px-1 py-0.5 text-xs text-[var(--app-text-secondary)] focus:border-[var(--app-accent)] focus:outline-none"
             value={currentDropdownValue(darkSource)}
             onChange={e => handleDropdownChange('dark', e.target.value)}
           >

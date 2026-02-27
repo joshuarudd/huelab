@@ -162,13 +162,13 @@ export function TokenMap() {
   return (
     <div className="flex h-full flex-col">
       {/* Header with mode toggle */}
-      <div className="flex items-center justify-between border-b border-neutral-800 px-3 py-2">
-        <h2 className="text-sm font-semibold text-neutral-300 uppercase tracking-wider">
+      <div className="flex items-center justify-between border-b border-[var(--app-border)] px-3 py-2">
+        <h2 className="text-sm font-semibold text-[var(--app-text-secondary)] uppercase tracking-wider">
           Token Map
         </h2>
         <button
           onClick={handleToggleMode}
-          className="flex items-center gap-2 rounded-md border border-neutral-700 bg-neutral-800 px-3 py-1 text-xs text-neutral-300 hover:bg-neutral-700 transition-colors"
+          className="flex items-center gap-2 rounded-md border border-[var(--app-border-secondary)] bg-[var(--app-elevated)] px-3 py-1 text-xs text-[var(--app-text-secondary)] hover:bg-[var(--app-hover)] transition-colors"
           title={`Current mode: ${mode}. Click to toggle.`}
         >
           {mode === 'light' ? (
@@ -189,8 +189,8 @@ export function TokenMap() {
       <div className="flex-1 overflow-y-auto px-1 py-2">
         {ramps.length === 0 && (
           <div className="px-3 py-8 text-center">
-            <p className="text-sm text-neutral-500">No ramps loaded.</p>
-            <p className="text-xs text-neutral-600 mt-1">
+            <p className="text-sm text-[var(--app-text-muted)]">No ramps loaded.</p>
+            <p className="text-xs text-[var(--app-text-faint)] mt-1">
               Add ramps in the Ramp Editor to assign token sources.
             </p>
           </div>
@@ -198,7 +198,7 @@ export function TokenMap() {
 
         {groups.map(group => (
           <div key={group.label} className="mb-4">
-            <h3 className="sticky top-0 z-10 bg-neutral-950 px-2 py-1 text-[11px] font-semibold uppercase tracking-widest text-neutral-500 border-b border-neutral-800/50">
+            <h3 className="sticky top-0 z-10 bg-[var(--app-bg)] px-2 py-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--app-text-muted)] border-b border-[var(--app-border)]">
               {group.label}
             </h3>
             <div className="mt-1">
@@ -223,7 +223,7 @@ export function TokenMap() {
       </div>
 
       {/* Footer summary */}
-      <div className="border-t border-neutral-800 px-3 py-1.5 text-[11px] text-neutral-500">
+      <div className="border-t border-[var(--app-border)] px-3 py-1.5 text-[11px] text-[var(--app-text-muted)]">
         {tokenNames.length} tokens &middot; {ramps.length} ramp{ramps.length !== 1 ? 's' : ''} loaded
       </div>
     </div>

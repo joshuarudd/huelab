@@ -130,7 +130,7 @@ export function RampEditor() {
   if (!ramp) {
     return (
       <div className="flex h-full flex-col items-center justify-center p-4">
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-[var(--app-text-muted)]">
           No ramp selected. Add a ramp to get started.
         </p>
       </div>
@@ -155,12 +155,12 @@ export function RampEditor() {
               if (e.key === 'Enter') handleRenameCommit();
               if (e.key === 'Escape') setEditingName(false);
             }}
-            className="w-full rounded border border-neutral-600 bg-neutral-800 px-1.5 py-0.5 text-sm font-semibold text-neutral-200 focus:border-blue-500 focus:outline-none"
+            className="w-full rounded border border-[var(--app-border-input)] bg-[var(--app-elevated)] px-1.5 py-0.5 text-sm font-semibold text-[var(--app-text-secondary)] focus:border-[var(--app-accent)] focus:outline-none"
             autoFocus
           />
         ) : (
           <h2
-            className="cursor-pointer text-sm font-semibold text-neutral-200 hover:text-white"
+            className="cursor-pointer text-sm font-semibold text-[var(--app-text-secondary)] hover:text-[var(--app-text)]"
             onClick={() => {
               setNameValue(ramp.name);
               setEditingName(true);
@@ -174,12 +174,12 @@ export function RampEditor() {
           <button
             type="button"
             onClick={handleAcceptSuggestion}
-            className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+            className="text-xs text-[var(--app-accent-text)] hover:opacity-80 transition-colors"
           >
             Rename to &ldquo;{suggestedName}&rdquo;?
           </button>
         )}
-        <p className="text-xs text-neutral-500">
+        <p className="text-xs text-[var(--app-text-muted)]">
           {ramp.stops.length} stops &middot; base at {ramp.baseStopId}
         </p>
       </div>
@@ -191,14 +191,14 @@ export function RampEditor() {
         label="Base Color"
       />
       {suggestedBaseHex && (
-        <p className="text-xs text-neutral-400">
+        <p className="text-xs text-[var(--app-text-muted)]">
           Best fit at stop {ramp.baseStopId}:{' '}
-          <span className="font-mono text-neutral-300">{suggestedBaseHex}</span>
+          <span className="font-mono text-[var(--app-text-secondary)]">{suggestedBaseHex}</span>
           {' \u2014 '}
           <button
             type="button"
             onClick={handleAcceptBaseColor}
-            className="text-blue-400 hover:text-blue-300 transition-colors"
+            className="text-[var(--app-accent-text)] hover:opacity-80 transition-colors"
           >
             Use {suggestedBaseHex}
           </button>
@@ -206,7 +206,7 @@ export function RampEditor() {
       )}
 
       {/* Divider */}
-      <hr className="border-neutral-800" />
+      <hr className="border-[var(--app-border)]" />
 
       {/* Stop strip with overrides */}
       <StopStrip
