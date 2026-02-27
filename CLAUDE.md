@@ -112,14 +112,15 @@ The core algorithm generates 11-stop OKLCH ramps from a base color:
 ## Changelog & Versioning
 
 - **Every PR merge to `main` is a version bump.** No exceptions.
-- **Update `CHANGELOG.md` at commit time.** When committing a `feat:` or `fix:` change, add a one-liner to the `[Unreleased]` section in the same commit. Use Keep a Changelog categories: Added, Changed, Fixed, Removed, Deprecated. Include issue/PR links when relevant. Skip entries for `docs:`, `style:`, `chore:`, test-only, or internal refactors.
+- **`[Unreleased]` lives on feature branches only.** `main` never has an `[Unreleased]` section — its top entry is always the latest tagged version.
+- **Update `CHANGELOG.md` at commit time.** When committing a `feat:` or `fix:` change on a feature branch, add a one-liner to the `[Unreleased]` section in the same commit. Use Keep a Changelog categories: Added, Changed, Fixed, Removed, Deprecated. Include issue/PR links when relevant. Skip entries for `docs:`, `style:`, `chore:`, test-only, or internal refactors.
 - **Version at PR completion.** Before merging to `main`:
-  1. Rename `[Unreleased]` → `[0.x.x] — YYYY-MM-DD` with the new version number
-  2. Add a fresh empty `[Unreleased]` section above it
-  3. Bump `version` in the relevant `package.json` files
-  4. Update the comparison links at the bottom of `CHANGELOG.md`
-  5. Commit as part of the PR
-  6. After merge, `git tag v0.x.x` on `main`
+  1. Rename `[Unreleased]` → `[0.x.x] — YYYY-MM-DD` with the new version number (remove the `[Unreleased]` section entirely)
+  2. Bump `version` in the relevant `package.json` files
+  3. Update the comparison links at the bottom of `CHANGELOG.md`
+  4. Commit as part of the PR
+  5. After merge, `git tag v0.x.x` on `main`
+- **Starting a new feature branch.** Add an `[Unreleased]` section at the top of `CHANGELOG.md` as part of the first feature/fix commit on the branch.
 - **Semver.** Until 1.0, minor versions (0.x.0) may include breaking changes. Patches (0.x.y) for fixes.
 
 ## Key References

@@ -4,8 +4,6 @@ All notable changes to this project will be documented in this file.
 
 This project follows [Semantic Versioning](https://semver.org/). Until 1.0.0, minor versions (0.x.0) may include breaking changes.
 
-## [Unreleased]
-
 ## [0.1.0] — 2026-02-27
 
 Initial v0.1 release — core library and interactive webapp. PR [#1](https://github.com/joshuarudd/huelab/pull/1).
@@ -61,5 +59,4 @@ Initial v0.1 release — core library and interactive webapp. PR [#1](https://gi
 - Color picker value fallback normalization
 - Ramp name uniqueness guard; null-safe rename
 
-[Unreleased]: https://github.com/joshuarudd/huelab/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/joshuarudd/huelab/releases/tag/v0.1.0
