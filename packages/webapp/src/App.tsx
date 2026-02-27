@@ -17,7 +17,11 @@ export function App() {
     <div className="flex flex-col h-screen bg-[var(--app-bg)] text-[var(--app-text)]">
       {/* Toolbar */}
       <header className="flex items-center justify-between border-b border-[var(--app-border)] px-4 py-3">
-        <h1 className="text-lg font-semibold">huelab</h1>
+        <h1 className="text-lg font-semibold">
+          <a href="https://github.com/joshuarudd/huelab" target="_blank" rel="noopener noreferrer">
+            huelab <span className="text-sm font-normal text-[var(--app-text-muted)]">0.2.1</span>
+          </a>
+        </h1>
         <div className="flex items-center gap-2">
           <select
             value={state.systemSettings.chromaCurve}
