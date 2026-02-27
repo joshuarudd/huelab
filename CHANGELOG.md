@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project follows [Semantic Versioning](https://semver.org/). Until 1.0.0, minor versions (0.x.0) may include breaking changes.
 
+## [Unreleased]
+
+### Added
+
+- Webapp state (ramps, token mappings, settings) now persists to localStorage and restores on page reload ([#6](https://github.com/joshuarudd/huelab/issues/6))
+
 ## [0.1.0] — 2026-02-27
 
 Initial v0.1 release — core library and interactive webapp. PR [#1](https://github.com/joshuarudd/huelab/pull/1).
