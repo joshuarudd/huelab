@@ -60,6 +60,18 @@ function loadState(): ProjectState | null {
   }
 }
 
+/**
+ * Persist state to localStorage. Fails silently (e.g., storage full,
+ * private browsing) so the app continues working without persistence.
+ */
+function saveState(state: ProjectState): void {
+  try {
+    const envelope: StorageEnvelope = { version: STORAGE_VERSION, state };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(envelope));
+  } catch {
+    console.warn('huelab: failed to save state to localStorage');
+  }
+}
 // ---------------------------------------------------------------------------
 // Initial state
 // ---------------------------------------------------------------------------
@@ -338,6 +350,20 @@ export function projectReducer(
   }
 }
 
+/**
+ * Wraps projectReducer to auto-save state after every dispatch.
+ */
+function persistReducer(
+  state: ProjectState,
+  action: ProjectAction,
+): ProjectState {
+  const nextState = projectReducer(state, action);
+  if (nextState !== state) {
+    saveState(nextState);
+  }
+  return nextState;
+}
+
 // ---------------------------------------------------------------------------
 // Context
 // ---------------------------------------------------------------------------
@@ -349,7 +375,7 @@ const ProjectContext = createContext<ProjectContextValue | null>(null);
 // ---------------------------------------------------------------------------
 
 export function ProjectProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(projectReducer, initialState);
+  const [state, dispatch] = useReducer(persistReducer, initialState);
 
   // Sync mode to DOM so CSS custom properties switch via .dark class
   useEffect(() => {
